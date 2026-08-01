@@ -27,8 +27,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# claude code local settings (contains secrets - DO NOT commit)
-.claude/settings.json
+# claude code personal settings & secrets (DO NOT commit)
 .claude/settings.local.json
 
 # next.js upgrade backup
