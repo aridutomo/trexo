@@ -18,10 +18,15 @@ export function TaskSteps({ task }: { task: Task }) {
   const progress = computeProgress(task);
   const done = task.steps.filter((s) => s.completed).length;
 
-  const submit = () => {
+  const submit = async () => {
     if (!newStep.trim()) return;
-    addStep(task.id, newStep.trim());
+    const value = newStep.trim();
     setNewStep("");
+    try {
+      await addStep(task.id, value);
+    } catch (e) {
+      console.error("[trexo] addStep failed:", e);
+    }
   };
 
   return (

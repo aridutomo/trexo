@@ -47,6 +47,7 @@ export default function TaskDetailPage() {
   const projects = useTrexo((s) => s.projects);
   const updateTask = useTrexo((s) => s.updateTask);
   const deleteTask = useTrexo((s) => s.deleteTask);
+  const loadComments = useTrexo((s) => s.loadComments);
 
   const task = tasks.find((t) => t.id === taskId);
   const project = task ? projects.find((p) => p.id === task.projectId) : undefined;
@@ -59,6 +60,11 @@ export default function TaskDetailPage() {
     setName(task?.name ?? "");
     setDesc(task?.description ?? "");
   }, [task?.id, task?.name, task?.description]);
+
+  // Comments are loaded per-task (not in bootstrap).
+  useEffect(() => {
+    if (taskId) void loadComments(taskId);
+  }, [taskId, loadComments]);
 
   if (!task) {
     return (
@@ -85,9 +91,13 @@ export default function TaskDetailPage() {
     if (desc !== task.description) updateTask(task.id, { description: desc });
   };
 
-  const handleDelete = () => {
-    deleteTask(task.id);
-    router.push(project ? `/app/projects/${project.id}` : "/app/dashboard");
+  const handleDelete = async () => {
+    try {
+      await deleteTask(task.id);
+      router.push(project ? `/app/projects/${project.id}` : "/app/dashboard");
+    } catch (e) {
+      console.error("[trexo] deleteTask failed:", e);
+    }
   };
 
   const dueValue = task.dueDate ? task.dueDate.slice(0, 10) : "";

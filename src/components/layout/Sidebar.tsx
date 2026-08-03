@@ -25,6 +25,7 @@ import { Avatar } from "@/components/ui/Avatar";
 import { Dropdown } from "@/components/ui/Dropdown";
 import { COLOR_PRESETS, PROJECT_ICONS } from "@/lib/constants";
 import { useTrexo } from "@/lib/store";
+import { useLogout } from "@/hooks/useLogout";
 import { cn } from "@/lib/utils";
 import type { WorkspaceType } from "@/lib/types";
 
@@ -39,8 +40,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const setActiveWorkspace = useTrexo((s) => s.setActiveWorkspace);
   const addWorkspace = useTrexo((s) => s.addWorkspace);
   const addProject = useTrexo((s) => s.addProject);
-  const logout = useTrexo((s) => s.logout);
-  const resetData = useTrexo((s) => s.resetData);
+  const bootstrap = useTrexo((s) => s.bootstrap);
 
   const [wsModal, setWsModal] = useState(false);
   const [projectModal, setProjectModal] = useState(false);
@@ -50,13 +50,10 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
     workspaces.find((w) => w.id === activeWorkspaceId) ?? workspaces[0];
   const wsProjects = projects.filter((p) => p.workspaceId === activeWorkspace?.id);
 
-  const handleLogout = () => {
-    logout();
-    router.replace("/login");
-  };
+  const logout = useLogout();
 
   const handleReset = () => {
-    resetData();
+    void bootstrap();
     router.replace("/app/dashboard");
   };
 
@@ -204,12 +201,12 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
           items={[
             { label: "Pengaturan", icon: <Settings className="h-4 w-4" />, onClick: () => nav("/app/settings") },
             {
-              label: "Reset data demo",
+              label: "Muat ulang data",
               icon: <RotateCcw className="h-4 w-4" />,
               onClick: handleReset,
             },
             { label: "", divider: true } as never,
-            { label: "Keluar", icon: <LogOut className="h-4 w-4" />, danger: true, onClick: handleLogout },
+            { label: "Keluar", icon: <LogOut className="h-4 w-4" />, danger: true, onClick: logout },
           ]}
         />
       </div>
@@ -217,20 +214,28 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       <AddWorkspaceModal
         open={wsModal}
         onClose={() => setWsModal(false)}
-        onCreate={(data) => {
-          addWorkspace(data);
-          setWsModal(false);
-          nav("/app/dashboard");
+        onCreate={async (data) => {
+          try {
+            await addWorkspace(data);
+            setWsModal(false);
+            nav("/app/dashboard");
+          } catch (e) {
+            console.error("[trexo] addWorkspace failed:", e);
+          }
         }}
       />
       <AddProjectModal
         open={projectModal}
         onClose={() => setProjectModal(false)}
-        onCreate={(data) => {
+        onCreate={async (data) => {
           if (!activeWorkspace) return;
-          const p = addProject({ ...data, workspaceId: activeWorkspace.id });
-          setProjectModal(false);
-          nav(`/app/projects/${p.id}`);
+          try {
+            const p = await addProject({ ...data, workspaceId: activeWorkspace.id });
+            setProjectModal(false);
+            nav(`/app/projects/${p.id}`);
+          } catch (e) {
+            console.error("[trexo] addProject failed:", e);
+          }
         }}
       />
     </aside>

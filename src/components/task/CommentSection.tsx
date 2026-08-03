@@ -24,10 +24,15 @@ export function CommentSection({ taskId }: { taskId: string }) {
     [comments, taskId]
   );
 
-  const submit = () => {
+  const submit = async () => {
     if (!text.trim()) return;
-    addComment(taskId, text.trim());
+    const value = text.trim();
     setText("");
+    try {
+      await addComment(taskId, value);
+    } catch (e) {
+      console.error("[trexo] addComment failed:", e);
+    }
   };
 
   const authorOf = (c: Comment) =>

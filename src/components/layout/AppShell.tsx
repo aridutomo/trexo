@@ -6,23 +6,34 @@ import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
 import { MobileNav } from "./MobileNav";
 import { MobileSearchOverlay } from "./MobileSearchOverlay";
-import { useHydrated, useTrexo } from "@/lib/store";
+import { useTrexo } from "@/lib/store";
+import { useSession } from "@/lib/auth-client";
 import { TrexoLogo } from "@/components/brand/TrexoLogo";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const hydrated = useHydrated();
+  const { data: session, isPending } = useSession();
   const user = useTrexo((s) => s.user);
+  const bootstrapped = useTrexo((s) => s.bootstrapped);
+  const loginFromSession = useTrexo((s) => s.loginFromSession);
+  const bootstrap = useTrexo((s) => s.bootstrap);
   const projects = useTrexo((s) => s.projects);
   const tasks = useTrexo((s) => s.tasks);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
-  // Auth gate
+  // Auth gate + data load. The middleware already bounces cookie-less requests
+  // to /login; here we validate the session for real and hydrate the store.
   useEffect(() => {
-    if (hydrated && !user) router.replace("/login");
-  }, [hydrated, user, router]);
+    if (isPending) return;
+    if (!session) {
+      router.replace("/login");
+      return;
+    }
+    if (!user) loginFromSession(session.user);
+    if (!bootstrapped) void bootstrap();
+  }, [isPending, session, user, bootstrapped, loginFromSession, bootstrap, router]);
 
   // Resolve title
   const title = (() => {
@@ -40,16 +51,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     return "Trexo";
   })();
 
-  if (!hydrated) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50">
-        <TrexoLogo className="h-10 w-10 animate-pulse" />
-      </div>
-    );
-  }
-
-  if (!user) {
-    // sedang redirect
+  if (isPending || !user || !bootstrapped) {
+    // validating session / loading data / redirecting
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50">
         <TrexoLogo className="h-10 w-10 animate-pulse" />

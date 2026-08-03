@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { User, RotateCcw, LogOut, Shield, Palette } from "lucide-react";
 import { useTrexo } from "@/lib/store";
+import { useLogout } from "@/hooks/useLogout";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Avatar } from "@/components/ui/Avatar";
@@ -13,8 +14,8 @@ import { Modal } from "@/components/ui/Modal";
 export default function SettingsPage() {
   const router = useRouter();
   const user = useTrexo((s) => s.user);
-  const logout = useTrexo((s) => s.logout);
-  const resetData = useTrexo((s) => s.resetData);
+  const bootstrap = useTrexo((s) => s.bootstrap);
+  const logout = useLogout();
   const [confirmReset, setConfirmReset] = useState(false);
 
   return (
@@ -75,15 +76,9 @@ export default function SettingsPage() {
         <CardBody className="flex flex-wrap items-center gap-3">
           <Button variant="outline" onClick={() => setConfirmReset(true)}>
             <RotateCcw className="h-4 w-4" />
-            Reset Data Demo
+            Muat Ulang Data
           </Button>
-          <Button
-            variant="outline"
-            onClick={() => {
-              logout();
-              router.replace("/login");
-            }}
-          >
+          <Button variant="outline" onClick={logout}>
             <LogOut className="h-4 w-4" />
             Keluar
           </Button>
@@ -93,8 +88,8 @@ export default function SettingsPage() {
       <Modal
         open={confirmReset}
         onClose={() => setConfirmReset(false)}
-        title="Reset semua data demo?"
-        description="Semua perubahan akan dikembalikan ke data awal."
+        title="Muat ulang data dari server?"
+        description="Data lokal akan disinkronkan ulang dengan backend."
         size="sm"
         footer={
           <>
@@ -102,18 +97,19 @@ export default function SettingsPage() {
             <Button
               variant="danger"
               onClick={() => {
-                resetData();
-                setConfirmReset(false);
-                router.replace("/app/dashboard");
+                void bootstrap().finally(() => {
+                  setConfirmReset(false);
+                  router.replace("/app/dashboard");
+                });
               }}
             >
               <RotateCcw className="h-4 w-4" />
-              Reset
+              Muat Ulang
             </Button>
           </>
         }
       >
-        <p className="text-sm text-slate-500">Tindakan ini tidak dapat dibatalkan.</p>
+        <p className="text-sm text-slate-500">Perubahan lokal yang belum tersinkron akan hilang.</p>
       </Modal>
     </div>
   );

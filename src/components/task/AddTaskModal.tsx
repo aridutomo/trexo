@@ -33,25 +33,33 @@ const empty = { name: "", description: "", source: "own_idea" as TaskSource, dif
 export function AddTaskModal({ open, onClose, projectId, defaultStatus = "todo", onCreate }: Props) {
   const addTask = useTrexo((s) => s.addTask);
   const [form, setForm] = useState(empty);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (open) setForm(empty);
   }, [open]);
 
-  const submit = () => {
-    if (!form.name.trim()) return;
-    const steps = form.steps.map((s) => s.trim()).filter(Boolean);
-    const task = addTask({
-      projectId,
-      name: form.name.trim(),
-      description: form.description.trim(),
-      status: defaultStatus,
-      source: form.source,
-      difficulty: form.difficulty,
-      steps,
-    });
-    onCreate?.(task.id);
-    onClose();
+  const submit = async () => {
+    if (!form.name.trim() || saving) return;
+    setSaving(true);
+    try {
+      const steps = form.steps.map((s) => s.trim()).filter(Boolean);
+      const task = await addTask({
+        projectId,
+        name: form.name.trim(),
+        description: form.description.trim(),
+        status: defaultStatus,
+        source: form.source,
+        difficulty: form.difficulty,
+        steps,
+      });
+      onCreate?.(task.id);
+      onClose();
+    } catch (e) {
+      console.error("[trexo] addTask failed:", e);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -66,7 +74,7 @@ export function AddTaskModal({ open, onClose, projectId, defaultStatus = "todo",
           <Button variant="ghost" onClick={onClose}>
             Batal
           </Button>
-          <Button onClick={submit} disabled={!form.name.trim()}>
+          <Button onClick={submit} disabled={!form.name.trim() || saving} loading={saving}>
             Buat Task
           </Button>
         </>
