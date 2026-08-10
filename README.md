@@ -1,76 +1,42 @@
 # Trexo 🦖
 
-Sistem manajemen pekerjaan modern — pisahkan pekerjaan **pribadi** & **perusahaan** dalam Workspace, kelola Project & Task dengan **Kanban drag-and-drop**, **progress otomatis**, dan **reporting + export Excel**.
+Sistem manajemen pekerjaan — Workspace, Project, Task (Kanban), progress otomatis, reporting + export Excel.
 
-> Status: **Frontend-first** dengan mock data layer. Backend (DB + API + NextAuth) tinggal disambung nanti.
+## Struktur (monorepo)
 
-## ✨ Fitur
+```
+trexo/
+├─ backend/    # Golang (Gin) + MySQL 8 — REST API. Lihat backend/README.md
+└─ frontend/   # Next.js (App Router) + Tailwind + better-auth. Lihat frontend/README.md
+```
 
-| # | Fitur | Status |
-|---|-------|--------|
-| 1 | Workspace (Pribadi / Perusahaan) — multi-workspace + switcher | ✅ |
-| 2 | Project per workspace | ✅ |
-| 3 | Task + kategorisasi Sumber Ide & Tingkat Kesulitan | ✅ |
-| 4 | Task Steps (checklist) | ✅ |
-| 5 | **Progress otomatis**: `(steps selesai / total) × 100`; tanpa steps → ikut status Kanban | ✅ |
-| 6 | Login modern (mock auth + tombol Google) | ✅ |
-| 7 | View **List** (search + sort) & **Kanban** (drag-drop real-time) | ✅ |
-| 8 | **Report**: filter, grafik, HTML preview, **Export Excel (.xlsx)** | ✅ |
+## Arsitektur
 
-Bonus: Dashboard ringkasan + grafik (Chart.js), komentar per task, global search, data persist di `localStorage`.
+```
+Browser → frontend (Next.js :3000, better-auth) → /api/v1/* BFF → backend (Go :8080) → MySQL
+```
 
-## 🧱 Tech Stack
+- **better-auth** (frontend) konek langsung ke MySQL lewat `mysql2`.
+- **BFF** (`frontend/src/app/api/v1/[...path]`) meneruskan request ke Go dengan header `X-Session-Token`.
+- **backend Go** memverifikasi token di tabel `session` (better-auth) pada MySQL yang sama, lalu CRUD pada tabel bisnis (`ms_workspace`, `ms_project`, `ms_task`, `tr_task_step`, `tr_comment`).
 
-- **Next.js 14** (App Router) + **TypeScript**
-- **Tailwind CSS 3** — komponen UI custom (tanpa shadcn)
-- **Zustand** (+ persist) — state & mock API layer
-- **@hello-pangea/dnd** — Kanban drag-and-drop
-- **Chart.js** (react-chartjs-2) — grafik
-- **SheetJS (xlsx)** — export Excel dari browser
-
-## 🚀 Menjalankan
+## Menjalankan (lokal)
 
 ```bash
+# 1. Backend (MySQL + Go API)
+cd backend
+cp .env.example .env          # set MYSQL_ROOT_PASSWORD dan MYSQL_PASSWORD
+docker compose up -d --build  # MySQL :3306, Go :8080 (default)
+
+# 2. Tabel better-auth (sekali)
+cd ../frontend
 npm install
-npm run dev        # http://localhost:3000
+npx @better-auth/cli migrate --config src/lib/auth.ts   # DATABASE_URL ada di frontend/.env.local
+
+# 3. Frontend
+npm run dev                  # http://localhost:3000
 ```
 
-**Login demo:** klik **"Masuk dengan Google"** (atau email apa pun + password ≥ 4 karakter).
+Login demo: sign-up email apa pun + password ≥ 8 karakter.
 
-Atur ulang data kapan saja lewat menu user → **Reset Data Demo**.
-
-## 📁 Struktur
-
-```
-src/
-├─ app/
-│  ├─ login/                     # Halaman login
-│  ├─ app/                       # Area terautentikasi (AppShell)
-│  │  ├─ dashboard/              # Ringkasan + grafik
-│  │  ├─ projects/[projectId]/   # List & Kanban
-│  │  ├─ tasks/[taskId]/         # Detail: steps, progress, komentar
-│  │  ├─ report/                 # Filter + export Excel
-│  │  └─ settings/
-│  └─ page.tsx                   # Redirect (login/dashboard)
-├─ components/
-│  ├─ ui/                        # Primitif: Button, Modal, Select, Badge, dll
-│  ├─ layout/                    # Sidebar, Topbar, AppShell
-│  ├─ kanban/                    # KanbanBoard, KanbanCard
-│  ├─ task/                      # AddTaskModal, TaskSteps, badges, dll
-│  └─ dashboard/                 # StatCard, chart
-└─ lib/
-   ├─ store.ts                   # Zustand + persist (MOCK API layer)
-   ├─ mock-data.ts               # Seed data
-   ├─ types.ts                   # Skema domain (≈ struktur DB)
-   ├─ utils.ts                   # cn, computeProgress, tanggal
-   └─ export.ts                  # Export Excel + ringkasan report
-```
-
-## 🔌 Menyambung backend (nanti)
-
-Mock layer ada di `src/lib/store.ts`. Untuk beralih ke backend asli, ganti body aksi (mis. `addTask`, `moveTask`) dengan pemanggilan API (`fetch`), dan ganti `seed-data` dengan hasil fetch awal. Tipe domain di `types.ts` sudah meniru skema DB (User, Workspace, Project, Task, TaskStep, Comment).
-
-```bash
-npm run build     # type-check + production build
-npm run start     # jalankan hasil build
-```
+Detail tiap komponen ada di `backend/README.md` dan `frontend/README.md`.

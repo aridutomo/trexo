@@ -1,0 +1,9 @@
+# Build artifacts & local files — keep the build context lean.
+*.md
+.env
+.env.*
+.git
+.gitignore
+.idea
+.vscode
+*.exe

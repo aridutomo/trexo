@@ -1,0 +1,54 @@
+# Trexo backend stack: Go API + MySQL 8.
+# Usage:
+#   cp .env.example .env   # fill MYSQL_* passwords
+#   docker compose up -d --build
+services:
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: trexo
+      MYSQL_USER: trexo
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_ai_ci
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      # mysqladmin exits 0 once MySQL accepts connections.
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "trexo", "-p${MYSQL_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    ports:
+      # Local dev: bind to localhost so the Next.js app can also reach it
+      # directly for better-auth. Remove the 127.0.0.1 binding in prod if the
+      # frontend runs elsewhere (use a tunnel/expose instead).
+      - "127.0.0.1:3306:3306"
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      PORT: "8080"
+      GO_ENV: production
+      # multiStatements=true is REQUIRED so golang-migrate can run multi-statement
+      # migration files. The app only uses parameterized queries, so this is safe.
+      DSN: "trexo:${MYSQL_PASSWORD}@tcp(mysql:3306)/trexo?parseTime=true&loc=UTC&charset=utf8mb4&multiStatements=true"
+      ALLOWED_ORIGINS: "${ALLOWED_ORIGINS:-http://localhost:3000}"
+      # Optional shared secret (CSV) between the Next.js BFF and this API.
+      # Leave empty to disable. When set, the BFF must send X-Api-Key.
+      BFF_API_KEYS: "${BFF_API_KEYS:-}"
+      RUN_MIGRATIONS: "true"
+    ports:
+      # Host port is configurable (defaults to 8080). Override with APP_PORT if
+      # 8080 is taken on the host.
+      - "${APP_PORT:-8080}:8080"
+
+volumes:
+  mysql_data:
