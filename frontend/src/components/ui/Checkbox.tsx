@@ -20,10 +20,10 @@ export function Checkbox({ checked, onChange, className, disabled, ...rest }: Ch
       disabled={disabled}
       onClick={() => onChange?.(!checked)}
       className={cn(
-        "flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded-md border transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40 focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50",
+        "flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded-md border transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50",
         checked
           ? "border-brand-600 bg-brand-600 text-white"
-          : "border-slate-300 bg-white hover:border-brand-400",
+          : "border-input bg-card hover:border-brand-400 dark:border-slate-600",
         className
       )}
       {...rest}

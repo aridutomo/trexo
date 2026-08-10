@@ -25,7 +25,7 @@ export function SegmentedControl<T extends string>({
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-1 rounded-xl bg-slate-100/80 p-1",
+        "inline-flex items-center gap-1 rounded-xl bg-muted p-1",
         className
       )}
     >
@@ -39,8 +39,8 @@ export function SegmentedControl<T extends string>({
               "inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg font-medium transition-all duration-150",
               size === "sm" ? "px-3 py-1.5 text-xs" : "px-3.5 py-2 text-sm",
               active
-                ? "bg-white text-slate-900 shadow-sm"
-                : "text-slate-500 hover:text-slate-800"
+                ? "bg-card text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
             {opt.label}

@@ -12,7 +12,7 @@ const colorForValue = (value: number) => {
   if (value >= 100) return "bg-emerald-500";
   if (value >= 50) return "bg-brand-500";
   if (value > 0) return "bg-amber-500";
-  return "bg-slate-300";
+  return "bg-slate-300 dark:bg-slate-600";
 };
 
 export function Progress({
@@ -27,7 +27,7 @@ export function Progress({
     <div className={cn("flex items-center gap-2", className)}>
       <div
         className={cn(
-          "w-full overflow-hidden rounded-full bg-slate-100",
+          "w-full overflow-hidden rounded-full bg-muted",
           size === "sm" ? "h-1.5" : "h-2"
         )}
       >
@@ -37,7 +37,7 @@ export function Progress({
         />
       </div>
       {showLabel && (
-        <span className="w-9 shrink-0 text-right text-xs font-medium tabular-nums text-slate-500">
+        <span className="w-9 shrink-0 text-right text-xs font-medium tabular-nums text-muted-foreground">
           {pct}%
         </span>
       )}

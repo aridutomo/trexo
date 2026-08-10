@@ -108,7 +108,7 @@ export default function TaskDetailPage() {
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <Link
           href={project ? `/app/projects/${project.id}` : "/app/dashboard"}
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-slate-600"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
           {project ? project.name : "Dashboard"}
@@ -126,7 +126,7 @@ export default function TaskDetailPage() {
         {/* Main column */}
         <div className="space-y-5 lg:col-span-2">
           {/* Title + description */}
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-card">
+          <div className="rounded-2xl border border-border bg-card p-5 shadow-card">
             <div className="mb-3 flex flex-wrap items-center gap-1.5">
               <Badge tone={task.difficulty === "easy" ? "emerald" : task.difficulty === "medium" ? "amber" : "rose"}>
                 {DIFFICULTY_META[task.difficulty].label}
@@ -140,7 +140,7 @@ export default function TaskDetailPage() {
               onChange={(e) => setName(e.target.value)}
               onBlur={commitName}
               onKeyDown={(e) => e.key === "Enter" && (e.target as HTMLInputElement).blur()}
-              className="font-display w-full rounded-xl border border-transparent bg-transparent px-2 py-1 text-2xl font-bold tracking-tight text-slate-900 outline-none transition-colors hover:bg-slate-50 focus:border-brand-300 focus:bg-white focus:ring-4 focus:ring-brand-500/10"
+              className="font-display w-full rounded-xl border border-transparent bg-transparent px-2 py-1 text-2xl font-bold tracking-tight text-foreground outline-none transition-colors hover:bg-muted focus:border-brand-300 focus:bg-card focus:ring-4 focus:ring-brand-500/15"
             />
             <textarea
               value={desc}
@@ -148,7 +148,7 @@ export default function TaskDetailPage() {
               onBlur={commitDesc}
               rows={3}
               placeholder="Tambahkan deskripsi…"
-              className="mt-2 w-full resize-none rounded-xl border border-transparent bg-transparent px-2 py-1 text-sm text-slate-600 outline-none transition-colors placeholder:text-slate-400 hover:bg-slate-50 focus:border-brand-300 focus:bg-white focus:ring-4 focus:ring-brand-500/10"
+              className="mt-2 w-full resize-none rounded-xl border border-transparent bg-transparent px-2 py-1 text-sm text-muted-foreground outline-none transition-colors placeholder:text-muted-foreground/70 hover:bg-muted focus:border-brand-300 focus:bg-card focus:ring-4 focus:ring-brand-500/15"
             />
           </div>
 
@@ -159,34 +159,34 @@ export default function TaskDetailPage() {
         {/* Sidebar */}
         <div className="space-y-5">
           {/* Progress */}
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-card">
+          <div className="rounded-2xl border border-border bg-card p-5 shadow-card">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-slate-900">Progress</h3>
-              <span className="text-2xl font-bold tabular-nums text-brand-600">{progress}%</span>
+              <h3 className="text-sm font-semibold text-foreground">Progress</h3>
+              <span className="text-2xl font-bold tabular-nums text-brand-600 dark:text-brand-400">{progress}%</span>
             </div>
             <div className="mt-3">
               <Progress value={progress} />
             </div>
-            <div className="mt-3 rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-500">
+            <div className="mt-3 rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground">
               {task.steps.length > 0 ? (
                 <span>
                   Dihitung otomatis:{" "}
-                  <span className="font-medium text-slate-700">
+                  <span className="font-medium text-foreground">
                     {stepsDone} / {task.steps.length} steps selesai
                   </span>
                 </span>
               ) : (
                 <span>
                   Tanpa steps — progress mengikuti status{" "}
-                  <span className="font-medium text-slate-700">{STATUS_META[task.status].label}</span>.
+                  <span className="font-medium text-foreground">{STATUS_META[task.status].label}</span>.
                 </span>
               )}
             </div>
           </div>
 
           {/* Properties */}
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-card">
-            <h3 className="mb-4 text-sm font-semibold text-slate-900">Properti</h3>
+          <div className="rounded-2xl border border-border bg-card p-5 shadow-card">
+            <h3 className="mb-4 text-sm font-semibold text-foreground">Properti</h3>
             <div className="space-y-4">
               <Select
                 label="Status"
@@ -214,8 +214,8 @@ export default function TaskDetailPage() {
                 ]}
               />
               <div>
-                <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-slate-700">
-                  <Calendar className="h-3.5 w-3.5 text-slate-400" />
+                <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-foreground">
+                  <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
                   Jatuh Tempo
                 </label>
                 <input
@@ -228,27 +228,27 @@ export default function TaskDetailPage() {
                         : undefined,
                     })
                   }
-                  className="h-10 w-full cursor-pointer rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 transition-colors focus:border-brand-400 focus:outline-none focus:ring-4 focus:ring-brand-500/10"
+                  className="h-10 w-full cursor-pointer rounded-xl border border-input bg-card px-3 text-sm text-foreground transition-colors [color-scheme:light] focus:border-brand-400 focus:outline-none focus:ring-4 focus:ring-brand-500/15 dark:[color-scheme:dark]"
                 />
               </div>
             </div>
           </div>
 
           {/* Meta */}
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-card">
-            <h3 className="mb-3 text-sm font-semibold text-slate-900">Detail</h3>
+          <div className="rounded-2xl border border-border bg-card p-5 shadow-card">
+            <h3 className="mb-3 text-sm font-semibold text-foreground">Detail</h3>
             <dl className="space-y-2.5 text-sm">
               <div className="flex items-center justify-between">
-                <dt className="flex items-center gap-1.5 text-slate-500">
+                <dt className="flex items-center gap-1.5 text-muted-foreground">
                   <Clock className="h-3.5 w-3.5" /> Dibuat
                 </dt>
-                <dd className="font-medium text-slate-700">{formatDate(task.createdAt, "d MMM yyyy")}</dd>
+                <dd className="font-medium text-foreground">{formatDate(task.createdAt, "d MMM yyyy")}</dd>
               </div>
               <div className="flex items-center justify-between">
-                <dt className="flex items-center gap-1.5 text-slate-500">
+                <dt className="flex items-center gap-1.5 text-muted-foreground">
                   <CircleCheck className="h-3.5 w-3.5" /> Diperbarui
                 </dt>
-                <dd className="font-medium text-slate-700">{formatRelative(task.updatedAt)}</dd>
+                <dd className="font-medium text-foreground">{formatRelative(task.updatedAt)}</dd>
               </div>
             </dl>
           </div>
@@ -273,7 +273,7 @@ export default function TaskDetailPage() {
           </>
         }
       >
-        <p className="text-sm text-slate-500">Tindakan ini tidak dapat dibatalkan.</p>
+        <p className="text-sm text-muted-foreground">Tindakan ini tidak dapat dibatalkan.</p>
       </Modal>
     </div>
   );

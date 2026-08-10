@@ -14,11 +14,11 @@ const sizeClasses = {
   lg: "h-11 w-11 text-base",
 };
 
-export function Avatar({ name, color = "#1e88e5", size = "md", className }: AvatarProps) {
+export function Avatar({ name, color = "#2563eb", size = "md", className }: AvatarProps) {
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 items-center justify-center rounded-full font-semibold text-white shadow-sm ring-2 ring-white",
+        "inline-flex shrink-0 items-center justify-center rounded-full font-semibold text-white shadow-sm ring-2 ring-background",
         sizeClasses[size],
         className
       )}

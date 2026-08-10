@@ -41,18 +41,18 @@ export function CommentSection({ taskId }: { taskId: string }) {
       : { name: "Anggota Tim", color: "#64748b", self: false };
 
   return (
-    <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-card">
-      <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-slate-900">
-        <MessageSquare className="h-4 w-4 text-slate-400" />
+    <div className="rounded-2xl border border-border bg-card p-5 shadow-card">
+      <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-foreground">
+        <MessageSquare className="h-4 w-4 text-muted-foreground" />
         Komentar
-        <span className="rounded-md bg-slate-100 px-1.5 py-0.5 text-xs font-medium text-slate-500">
+        <span className="rounded-md bg-muted px-1.5 py-0.5 text-xs font-medium text-muted-foreground">
           {taskComments.length}
         </span>
       </h3>
 
       <div className="space-y-4">
         {taskComments.length === 0 && (
-          <p className="py-2 text-center text-sm text-slate-400">
+          <p className="py-2 text-center text-sm text-muted-foreground">
             Belum ada komentar. Mulai catat progres di sini.
           </p>
         )}
@@ -63,19 +63,19 @@ export function CommentSection({ taskId }: { taskId: string }) {
               <Avatar name={author.name} color={author.color} size="sm" />
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-slate-800">{author.name}</span>
-                  <span className="text-xs text-slate-400">{formatRelative(c.createdAt)}</span>
+                  <span className="text-sm font-medium text-foreground">{author.name}</span>
+                  <span className="text-xs text-muted-foreground">{formatRelative(c.createdAt)}</span>
                   {author.self && (
                     <button
                       onClick={() => deleteComment(c.id)}
-                      className="ml-auto rounded p-1 text-slate-300 opacity-0 transition-all hover:bg-rose-50 hover:text-rose-500 group-hover:opacity-100"
+                      className="ml-auto rounded p-1 text-muted-foreground opacity-0 transition-all hover:bg-rose-50 hover:text-rose-500 group-hover:opacity-100 dark:hover:bg-rose-500/10 dark:hover:text-rose-400"
                       aria-label="Hapus komentar"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
                   )}
                 </div>
-                <div className="mt-1 rounded-2xl rounded-tl-sm bg-slate-100/70 px-3 py-2 text-sm text-slate-700">
+                <div className="mt-1 rounded-2xl rounded-tl-sm bg-muted px-3 py-2 text-sm text-foreground">
                   {c.content}
                 </div>
               </div>
@@ -99,7 +99,7 @@ export function CommentSection({ taskId }: { taskId: string }) {
             }}
             rows={2}
             placeholder="Tulis komentar… (Ctrl+Enter untuk kirim)"
-            className="w-full resize-none rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 placeholder:text-slate-400 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500/15"
+            className="w-full resize-none rounded-xl border border-input bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500/15"
           />
           <div className="mt-2 flex justify-end">
             <Button size="sm" onClick={submit} disabled={!text.trim()}>

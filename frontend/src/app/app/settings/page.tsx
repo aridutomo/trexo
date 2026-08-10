@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import { User, RotateCcw, LogOut, Shield, Palette } from "lucide-react";
 import { useTrexo } from "@/lib/store";
 import { useLogout } from "@/hooks/useLogout";
@@ -21,24 +22,24 @@ export default function SettingsPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6 p-4 lg:p-8">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight text-slate-900">Pengaturan</h2>
-        <p className="mt-1 text-sm text-slate-500">Kelola profil dan preferensi akun Anda.</p>
+        <h2 className="text-2xl font-bold tracking-tight text-foreground">Pengaturan</h2>
+        <p className="mt-1 text-sm text-muted-foreground">Kelola profil dan preferensi akun Anda.</p>
       </div>
 
       {/* Profile */}
       <Card>
         <CardHeader>
-          <h3 className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-            <User className="h-4 w-4 text-slate-400" /> Profil
+          <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+            <User className="h-4 w-4 text-muted-foreground" /> Profil
           </h3>
         </CardHeader>
         <CardBody className="space-y-4">
           <div className="flex items-center gap-4">
             <Avatar name={user?.name ?? "U"} color={user?.avatarColor} size="lg" />
             <div>
-              <p className="font-semibold text-slate-900">{user?.name}</p>
-              <p className="text-sm text-slate-500">{user?.email}</p>
-              <span className="mt-1 inline-block rounded-md bg-brand-50 px-2 py-0.5 text-xs font-medium capitalize text-brand-700">
+              <p className="font-semibold text-foreground">{user?.name}</p>
+              <p className="text-sm text-muted-foreground">{user?.email}</p>
+              <span className="mt-1 inline-block rounded-md bg-brand-50 px-2 py-0.5 text-xs font-medium capitalize text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
                 Login via {user?.authProvider}
               </span>
             </div>
@@ -47,29 +48,29 @@ export default function SettingsPage() {
             <Input label="Nama" defaultValue={user?.name} disabled />
             <Input label="Email" defaultValue={user?.email} disabled />
           </div>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-muted-foreground">
             Mode demo: perubahan profil nonaktif. Pada produksi tersambung ke backend.
           </p>
         </CardBody>
       </Card>
 
-      {/* Preferences (decorative) */}
+      {/* Preferences */}
       <Card>
         <CardHeader>
-          <h3 className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-            <Palette className="h-4 w-4 text-slate-400" /> Preferensi
+          <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+            <Palette className="h-4 w-4 text-muted-foreground" /> Preferensi
           </h3>
         </CardHeader>
         <CardBody className="space-y-3">
           <ToggleRow label="Notifikasi email" description="Pengingat jatuh tempo task." defaultOn />
-          <ToggleRow label="Mode gelap" description="Tampilan gelap (segera hadir)." />
+          <ThemeToggleRow />
         </CardBody>
       </Card>
 
       {/* Danger zone */}
-      <Card className="border-rose-200">
+      <Card className="border-rose-200 dark:border-rose-500/30">
         <CardHeader>
-          <h3 className="flex items-center gap-2 text-sm font-semibold text-rose-700">
+          <h3 className="flex items-center gap-2 text-sm font-semibold text-rose-700 dark:text-rose-400">
             <Shield className="h-4 w-4" /> Zona Berbahaya
           </h3>
         </CardHeader>
@@ -109,8 +110,34 @@ export default function SettingsPage() {
           </>
         }
       >
-        <p className="text-sm text-slate-500">Perubahan lokal yang belum tersinkron akan hilang.</p>
+        <p className="text-sm text-muted-foreground">Perubahan lokal yang belum tersinkron akan hilang.</p>
       </Modal>
+    </div>
+  );
+}
+
+function ThemeToggleRow() {
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const on = mounted && resolvedTheme === "dark";
+
+  return (
+    <div className="flex items-center justify-between">
+      <div>
+        <p className="text-sm font-medium text-foreground">Mode gelap</p>
+        <p className="text-xs text-muted-foreground">Tampilan gelap untuk kenyamanan mata.</p>
+      </div>
+      <button
+        onClick={() => setTheme(on ? "light" : "dark")}
+        role="switch"
+        aria-checked={on}
+        className={`relative h-6 w-11 cursor-pointer rounded-full transition-colors duration-200 ${on ? "bg-brand-600" : "bg-muted-foreground/30"}`}
+      >
+        <span
+          className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200 ${on ? "translate-x-5" : "translate-x-0"}`}
+        />
+      </button>
     </div>
   );
 }
@@ -120,14 +147,14 @@ function ToggleRow({ label, description, defaultOn = false }: { label: string; d
   return (
     <div className="flex items-center justify-between">
       <div>
-        <p className="text-sm font-medium text-slate-800">{label}</p>
-        <p className="text-xs text-slate-400">{description}</p>
+        <p className="text-sm font-medium text-foreground">{label}</p>
+        <p className="text-xs text-muted-foreground">{description}</p>
       </div>
       <button
         onClick={() => setOn((v) => !v)}
         role="switch"
         aria-checked={on}
-        className={`relative h-6 w-11 cursor-pointer rounded-full transition-colors duration-200 ${on ? "bg-brand-600" : "bg-slate-300"}`}
+        className={`relative h-6 w-11 cursor-pointer rounded-full transition-colors duration-200 ${on ? "bg-brand-600" : "bg-muted-foreground/30"}`}
       >
         <span
           className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200 ${on ? "translate-x-5" : "translate-x-0"}`}

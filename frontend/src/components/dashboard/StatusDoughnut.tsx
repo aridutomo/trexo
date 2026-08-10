@@ -5,6 +5,7 @@ import { Doughnut } from "react-chartjs-2";
 import type { ChartOptions, TooltipItem } from "chart.js";
 import { Card, CardHeader, CardBody } from "@/components/ui/Card";
 import { STATUS_META, STATUS_ORDER, type TaskStatus } from "@/lib/types";
+import { useChartTheme } from "@/hooks/useChartTheme";
 
 interface Props {
   counts: Record<TaskStatus, number>;
@@ -18,6 +19,8 @@ const COLORS: Record<TaskStatus, string> = {
 };
 
 export function StatusDoughnut({ counts }: Props) {
+  const ct = useChartTheme();
+
   const data = {
     labels: STATUS_ORDER.map((s) => STATUS_META[s].label),
     datasets: [
@@ -39,7 +42,9 @@ export function StatusDoughnut({ counts }: Props) {
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: "rgba(15,23,42,0.92)",
+        backgroundColor: ct.tooltipBg,
+        titleColor: ct.tooltipText,
+        bodyColor: ct.tooltipText,
         padding: 10,
         cornerRadius: 10,
         titleFont: { size: 12, weight: 600 as const },
@@ -60,24 +65,24 @@ export function StatusDoughnut({ counts }: Props) {
     <Card className="flex h-full flex-col">
       <CardHeader className="flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-semibold text-slate-900">Distribusi Status</h3>
-          <p className="text-xs text-slate-400">Sebaran task per tahap</p>
+          <h3 className="text-sm font-semibold text-foreground">Distribusi Status</h3>
+          <p className="text-xs text-muted-foreground">Sebaran task per tahap</p>
         </div>
       </CardHeader>
       <CardBody className="flex flex-1 items-center gap-4">
         <div className="relative h-40 w-40 shrink-0">
           <Doughnut data={data} options={options} />
           <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-            <span className="font-display text-3xl font-bold tabular-nums text-slate-900">{total}</span>
-            <span className="text-xs font-medium text-slate-400">Total</span>
+            <span className="font-display text-3xl font-bold tabular-nums text-foreground">{total}</span>
+            <span className="text-xs font-medium text-muted-foreground">Total</span>
           </div>
         </div>
         <ul className="flex-1 space-y-2">
           {STATUS_ORDER.map((s) => (
             <li key={s} className="flex items-center gap-2 text-sm">
               <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: COLORS[s] }} />
-              <span className="flex-1 text-slate-600">{STATUS_META[s].label}</span>
-              <span className="font-semibold tabular-nums text-slate-900">{counts[s]}</span>
+              <span className="flex-1 text-muted-foreground">{STATUS_META[s].label}</span>
+              <span className="font-semibold tabular-nums text-foreground">{counts[s]}</span>
             </li>
           ))}
         </ul>

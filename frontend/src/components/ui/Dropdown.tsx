@@ -44,7 +44,7 @@ export function Dropdown({ trigger, items, align = "right", dropUp = false, clas
       {open && (
         <div
           className={cn(
-            "absolute z-30 min-w-[200px] overflow-hidden rounded-xl border border-slate-200 bg-white p-1 shadow-lift animate-scale-in",
+            "absolute z-30 min-w-[200px] overflow-hidden rounded-xl border border-border bg-popover p-1 text-popover-foreground shadow-lift animate-scale-in",
             dropUp ? "bottom-full mb-1.5" : "top-full mt-1.5",
             align === "right"
               ? dropUp
@@ -57,7 +57,7 @@ export function Dropdown({ trigger, items, align = "right", dropUp = false, clas
         >
           {items.map((item, i) =>
             item.divider ? (
-              <div key={i} className="my-1 h-px bg-slate-100" />
+              <div key={i} className="my-1 h-px bg-border" />
             ) : (
               <button
                 key={i}
@@ -68,11 +68,11 @@ export function Dropdown({ trigger, items, align = "right", dropUp = false, clas
                 className={cn(
                   "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm transition-colors",
                   item.danger
-                    ? "text-rose-600 hover:bg-rose-50"
-                    : "text-slate-700 hover:bg-slate-100"
+                    ? "text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-500/10"
+                    : "text-foreground hover:bg-muted"
                 )}
               >
-                {item.icon && <span className="text-slate-400">{item.icon}</span>}
+                {item.icon && <span className="text-muted-foreground">{item.icon}</span>}
                 {item.label}
               </button>
             )

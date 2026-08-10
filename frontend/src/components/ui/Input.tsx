@@ -17,13 +17,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full">
         {label && (
-          <label htmlFor={inputId} className="mb-1.5 block text-sm font-medium text-slate-700">
+          <label htmlFor={inputId} className="mb-1.5 block text-sm font-medium text-foreground">
             {label}
           </label>
         )}
         <div className="relative">
           {leftIcon && (
-            <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+            <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
               {leftIcon}
             </span>
           )}
@@ -31,10 +31,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             ref={ref}
             className={cn(
-              "h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 transition-colors placeholder:text-slate-400 focus:border-brand-400 focus:outline-none focus:ring-4 focus:ring-brand-500/10 disabled:bg-slate-50 disabled:text-slate-500",
+              "h-10 w-full rounded-xl border border-input bg-card px-3 text-sm text-foreground transition-colors placeholder:text-muted-foreground focus:border-brand-400 focus:outline-none focus:ring-4 focus:ring-brand-500/15 disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground",
               leftIcon && "pl-9",
               rightIcon && "pr-9",
-              error && "border-rose-400 focus:border-rose-500 focus:ring-rose-500/20",
+              error && "border-rose-400 focus:border-rose-500 focus:ring-rose-500/20 dark:border-rose-500/60",
               className
             )}
             {...props}
@@ -46,9 +46,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           )}
         </div>
         {error ? (
-          <p className="mt-1.5 text-xs text-rose-600">{error}</p>
+          <p className="mt-1.5 text-xs text-rose-600 dark:text-rose-400">{error}</p>
         ) : hint ? (
-          <p className="mt-1.5 text-xs text-slate-500">{hint}</p>
+          <p className="mt-1.5 text-xs text-muted-foreground">{hint}</p>
         ) : null}
       </div>
     );
@@ -67,7 +67,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <div className="w-full">
         {label && (
-          <label htmlFor={inputId} className="mb-1.5 block text-sm font-medium text-slate-700">
+          <label htmlFor={inputId} className="mb-1.5 block text-sm font-medium text-foreground">
             {label}
           </label>
         )}
@@ -75,13 +75,13 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           id={inputId}
           ref={ref}
           className={cn(
-            "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 transition-colors placeholder:text-slate-400 focus:border-brand-400 focus:outline-none focus:ring-4 focus:ring-brand-500/10",
-            error && "border-rose-400",
+            "w-full rounded-xl border border-input bg-card px-3 py-2 text-sm text-foreground transition-colors placeholder:text-muted-foreground focus:border-brand-400 focus:outline-none focus:ring-4 focus:ring-brand-500/15",
+            error && "border-rose-400 dark:border-rose-500/60",
             className
           )}
           {...props}
         />
-        {error && <p className="mt-1.5 text-xs text-rose-600">{error}</p>}
+        {error && <p className="mt-1.5 text-xs text-rose-600 dark:text-rose-400">{error}</p>}
       </div>
     );
   }

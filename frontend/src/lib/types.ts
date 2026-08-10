@@ -77,32 +77,32 @@ export const STATUS_META: Record<
   todo: {
     label: "To Do",
     color: "slate",
-    bg: "bg-slate-100",
-    text: "text-slate-600",
-    dot: "bg-slate-400",
+    bg: "bg-slate-100 dark:bg-slate-500/15",
+    text: "text-slate-600 dark:text-slate-300",
+    dot: "bg-slate-400 dark:bg-slate-500",
     order: 0,
   },
   in_progress: {
     label: "In Progress",
     color: "blue",
-    bg: "bg-blue-50",
-    text: "text-blue-600",
+    bg: "bg-blue-50 dark:bg-blue-500/15",
+    text: "text-blue-600 dark:text-blue-300",
     dot: "bg-blue-500",
     order: 1,
   },
   review: {
     label: "Review",
     color: "amber",
-    bg: "bg-amber-50",
-    text: "text-amber-600",
+    bg: "bg-amber-50 dark:bg-amber-500/15",
+    text: "text-amber-600 dark:text-amber-300",
     dot: "bg-amber-500",
     order: 2,
   },
   done: {
     label: "Done",
     color: "emerald",
-    bg: "bg-emerald-50",
-    text: "text-emerald-600",
+    bg: "bg-emerald-50 dark:bg-emerald-500/15",
+    text: "text-emerald-600 dark:text-emerald-300",
     dot: "bg-emerald-500",
     order: 3,
   },
@@ -114,30 +114,30 @@ export const DIFFICULTY_META: Record<
 > = {
   easy: {
     label: "Mudah",
-    bg: "bg-emerald-50",
-    text: "text-emerald-700",
-    ring: "ring-emerald-200",
+    bg: "bg-emerald-50 dark:bg-emerald-500/15",
+    text: "text-emerald-700 dark:text-emerald-300",
+    ring: "ring-emerald-200 dark:ring-emerald-500/20",
     value: 1,
   },
   medium: {
     label: "Medium",
-    bg: "bg-amber-50",
-    text: "text-amber-700",
-    ring: "ring-amber-200",
+    bg: "bg-amber-50 dark:bg-amber-500/15",
+    text: "text-amber-700 dark:text-amber-300",
+    ring: "ring-amber-200 dark:ring-amber-500/20",
     value: 2,
   },
   hard: {
     label: "Susah",
-    bg: "bg-rose-50",
-    text: "text-rose-700",
-    ring: "ring-rose-200",
+    bg: "bg-rose-50 dark:bg-rose-500/15",
+    text: "text-rose-700 dark:text-rose-300",
+    ring: "ring-rose-200 dark:ring-rose-500/20",
     value: 3,
   },
 };
 
 export const SOURCE_META: Record<TaskSource, { label: string; bg: string; text: string }> = {
-  own_idea: { label: "Ide Sendiri", bg: "bg-sky-50", text: "text-sky-700" },
-  user_request: { label: "Permintaan User", bg: "bg-violet-50", text: "text-violet-700" },
+  own_idea: { label: "Ide Sendiri", bg: "bg-sky-50 dark:bg-sky-500/15", text: "text-sky-700 dark:text-sky-300" },
+  user_request: { label: "Permintaan User", bg: "bg-violet-50 dark:bg-violet-500/15", text: "text-violet-700 dark:text-violet-300" },
 };
 
 export const STATUS_ORDER: TaskStatus[] = ["todo", "in_progress", "review", "done"];

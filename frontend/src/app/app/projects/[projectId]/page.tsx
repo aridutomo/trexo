@@ -72,11 +72,11 @@ export default function ProjectPage() {
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
-      <div className="border-b border-slate-200 bg-white px-4 py-5 lg:px-8">
+      <div className="border-b border-border bg-card px-4 py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <Link
             href="/app/dashboard"
-            className="mb-3 inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-slate-600"
+            className="mb-3 inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             Dashboard
@@ -84,17 +84,17 @@ export default function ProjectPage() {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="flex items-start gap-3">
               <span
-                className="flex h-12 w-12 items-center justify-center rounded-2xl text-2xl"
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-2xl"
                 style={{ backgroundColor: `${project.color}1a` }}
               >
                 {project.icon}
               </span>
-              <div>
-                <h2 className="text-xl font-bold tracking-tight text-slate-900">
+              <div className="min-w-0">
+                <h2 className="text-xl font-bold tracking-tight text-foreground">
                   {project.name}
                 </h2>
                 {project.description && (
-                  <p className="mt-0.5 max-w-xl text-sm text-slate-500">{project.description}</p>
+                  <p className="mt-0.5 max-w-xl text-sm text-muted-foreground">{project.description}</p>
                 )}
                 <div className="mt-2 flex flex-wrap items-center gap-1.5">
                   {STATUS_ORDER.map((s) => (

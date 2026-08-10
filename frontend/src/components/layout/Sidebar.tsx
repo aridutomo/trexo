@@ -14,7 +14,6 @@ import {
   LogOut,
   RotateCcw,
   Check,
-  FolderKanban,
   ChevronDown,
 } from "lucide-react";
 import { TrexoLogo } from "@/components/brand/TrexoLogo";
@@ -23,6 +22,7 @@ import { Button } from "@/components/ui/Button";
 import { Input, Textarea } from "@/components/ui/Input";
 import { Avatar } from "@/components/ui/Avatar";
 import { Dropdown } from "@/components/ui/Dropdown";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { COLOR_PRESETS, PROJECT_ICONS } from "@/lib/constants";
 import { useTrexo } from "@/lib/store";
 import { useLogout } from "@/hooks/useLogout";
@@ -44,7 +44,6 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
 
   const [wsModal, setWsModal] = useState(false);
   const [projectModal, setProjectModal] = useState(false);
-  const [wsOpen, setWsOpen] = useState(false);
 
   const activeWorkspace =
     workspaces.find((w) => w.id === activeWorkspaceId) ?? workspaces[0];
@@ -63,11 +62,11 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   };
 
   return (
-    <aside className="flex h-full w-[264px] shrink-0 flex-col border-r border-slate-200 bg-white text-slate-600">
+    <aside className="flex h-full w-[264px] shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-muted-foreground">
       {/* Logo */}
       <div className="flex h-16 items-center gap-2.5 px-5">
         <TrexoLogo className="h-8 w-8" />
-        <span className="font-display text-lg font-bold tracking-tight text-slate-900">Trexo</span>
+        <span className="font-display text-lg font-bold tracking-tight text-foreground">Trexo</span>
       </div>
 
       {/* Workspace switcher */}
@@ -77,7 +76,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
           trigger={
             <button
               type="button"
-              className="flex w-full items-center gap-2.5 rounded-xl bg-slate-100 px-3 py-2.5 text-left transition-colors hover:bg-slate-200"
+              className="flex w-full items-center gap-2.5 rounded-xl bg-muted px-3 py-2.5 text-left transition-colors hover:bg-muted/70"
             >
               <span
                 className="flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold text-white"
@@ -90,14 +89,14 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                 )}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm font-semibold text-slate-900">
+                <span className="block truncate text-sm font-semibold text-foreground">
                   {activeWorkspace?.name}
                 </span>
-                <span className="block text-xs capitalize text-slate-500">
+                <span className="block text-xs capitalize text-muted-foreground">
                   {activeWorkspace?.type === "company" ? "Workspace Perusahaan" : "Workspace Pribadi"}
                 </span>
               </span>
-              <ChevronsUpDown className="h-4 w-4 shrink-0 text-slate-500" />
+              <ChevronsUpDown className="h-4 w-4 shrink-0 text-muted-foreground" />
             </button>
           }
           items={[
@@ -138,12 +137,12 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       {/* Projects */}
       <div className="mt-6 flex min-h-0 flex-1 flex-col px-3">
         <div className="mb-1.5 flex items-center justify-between px-2">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
             Project
           </span>
           <button
             onClick={() => setProjectModal(true)}
-            className="rounded-md p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+            className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             title="Tambah project"
           >
             <Plus className="h-4 w-4" />
@@ -151,7 +150,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
         </div>
         <div className="scrollbar-thin -mr-1 flex-1 space-y-0.5 overflow-y-auto pr-1">
           {wsProjects.length === 0 && (
-            <p className="px-2 py-3 text-xs text-slate-400">Belum ada project.</p>
+            <p className="px-2 py-3 text-xs text-muted-foreground">Belum ada project.</p>
           )}
           {wsProjects.map((p) => {
             const count = tasks.filter((t) => t.projectId === p.id).length;
@@ -162,7 +161,9 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                 onClick={() => nav(`/app/projects/${p.id}`)}
                 className={cn(
                   "group flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-sm transition-colors",
-                  active ? "bg-brand-50 text-brand-700" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  active
+                    ? "bg-brand-50 font-medium text-brand-700 dark:bg-brand-500/15 dark:text-brand-300"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >
                 <span className="text-base leading-none">{p.icon}</span>
@@ -170,7 +171,9 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                 <span
                   className={cn(
                     "rounded-md px-1.5 py-0.5 text-[10px] font-medium tabular-nums",
-                    active ? "bg-brand-100 text-brand-700" : "bg-slate-100 text-slate-500"
+                    active
+                      ? "bg-brand-100 text-brand-700 dark:bg-brand-500/20 dark:text-brand-300"
+                      : "bg-muted text-muted-foreground"
                   )}
                 >
                   {count}
@@ -182,20 +185,20 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       </div>
 
       {/* User */}
-      <div className="border-t border-slate-200 p-3">
+      <div className="flex items-center gap-1.5 border-t border-sidebar-border p-3">
         <Dropdown
           align="left"
           dropUp
           trigger={
-            <button className="flex w-full items-center gap-2.5 rounded-xl px-2 py-2 transition-colors hover:bg-slate-100">
+            <button className="flex min-w-0 flex-1 items-center gap-2.5 rounded-xl px-2 py-2 transition-colors hover:bg-muted">
               <Avatar name={user?.name ?? "User"} color={user?.avatarColor} size="sm" />
               <span className="min-w-0 flex-1 text-left">
-                <span className="block truncate text-sm font-medium text-slate-900">
+                <span className="block truncate text-sm font-medium text-foreground">
                   {user?.name}
                 </span>
-                <span className="block truncate text-xs text-slate-500">{user?.email}</span>
+                <span className="block truncate text-xs text-muted-foreground">{user?.email}</span>
               </span>
-              <ChevronDown className="h-4 w-4 text-slate-500" />
+              <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
             </button>
           }
           items={[
@@ -209,6 +212,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
             { label: "Keluar", icon: <LogOut className="h-4 w-4" />, danger: true, onClick: logout },
           ]}
         />
+        <ThemeToggle />
       </div>
 
       <AddWorkspaceModal
@@ -259,8 +263,8 @@ function NavItem({
       className={cn(
         "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium transition-colors",
         active
-          ? "bg-brand-600 text-white shadow-soft"
-          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+          ? "bg-brand-50 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300"
+          : "text-muted-foreground hover:bg-muted hover:text-foreground"
       )}
     >
       {icon}
@@ -313,7 +317,7 @@ function AddWorkspaceModal({
       <div className="space-y-4">
         <Input label="Nama Workspace" placeholder="cth. PT Sinar Teknologi" value={name} onChange={(e) => setName(e.target.value)} />
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-slate-700">Tipe</label>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">Tipe</label>
           <div className="grid grid-cols-2 gap-2">
             {([
               { v: "personal", label: "Pribadi", icon: <UserRound className="h-4 w-4" /> },
@@ -325,8 +329,8 @@ function AddWorkspaceModal({
                 className={cn(
                   "flex items-center gap-2 rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors",
                   type === o.v
-                    ? "border-brand-500 bg-brand-50 text-brand-700"
-                    : "border-slate-300 text-slate-600 hover:bg-slate-50"
+                    ? "border-brand-500 bg-brand-50 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300"
+                    : "border-input text-muted-foreground hover:bg-muted"
                 )}
               >
                 {o.icon}
@@ -390,13 +394,13 @@ function AddProjectModal({
         <div>
           <div className="flex gap-3">
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">Ikon</label>
+              <label className="mb-1.5 block text-sm font-medium text-foreground">Ikon</label>
               <button
                 type="button"
                 onClick={() => setIconOpen((v) => !v)}
                 className={cn(
-                  "flex h-10 w-10 items-center justify-center rounded-lg border bg-white text-xl transition-colors",
-                  iconOpen ? "border-brand-500 ring-2 ring-brand-100" : "border-slate-300 hover:border-slate-400"
+                  "flex h-10 w-10 items-center justify-center rounded-lg border bg-card text-xl transition-colors",
+                  iconOpen ? "border-brand-500 ring-2 ring-brand-100 dark:ring-brand-500/30" : "border-input hover:border-slate-300 dark:hover:border-slate-600"
                 )}
                 aria-label="Pilih ikon"
               >
@@ -408,7 +412,7 @@ function AddProjectModal({
             </div>
           </div>
           {iconOpen && (
-            <div className="mt-2 grid grid-cols-8 gap-1 rounded-xl border border-slate-200 bg-white p-2">
+            <div className="mt-2 grid grid-cols-8 gap-1 rounded-xl border border-border bg-card p-2">
               {PROJECT_ICONS.map((ic) => (
                 <button
                   key={ic}
@@ -419,7 +423,7 @@ function AddProjectModal({
                   }}
                   className={cn(
                     "flex h-8 w-8 items-center justify-center rounded-md text-lg transition-colors",
-                    ic === icon ? "bg-brand-50 ring-2 ring-brand-400" : "hover:bg-slate-100"
+                    ic === icon ? "bg-brand-50 ring-2 ring-brand-400 dark:bg-brand-500/20 dark:ring-brand-500/40" : "hover:bg-muted"
                   )}
                 >
                   {ic}
@@ -446,7 +450,7 @@ function ColorPicker({
 }) {
   return (
     <div>
-      <label className="mb-1.5 block text-sm font-medium text-slate-700">{label}</label>
+      <label className="mb-1.5 block text-sm font-medium text-foreground">{label}</label>
       <div className="flex flex-wrap gap-2">
         {COLOR_PRESETS.map((c) => (
           <button
@@ -454,7 +458,7 @@ function ColorPicker({
             onClick={() => onChange(c)}
             className={cn(
               "flex h-8 w-8 items-center justify-center rounded-lg transition-transform hover:scale-110",
-              value === c && "ring-2 ring-offset-2"
+              value === c && "ring-2 ring-offset-2 ring-offset-card"
             )}
             style={{ backgroundColor: c, boxShadow: value === c ? `0 0 0 2px ${c}` : undefined }}
           >

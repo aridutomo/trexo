@@ -5,6 +5,7 @@ import { Bar } from "react-chartjs-2";
 import type { ChartOptions } from "chart.js";
 import { Card, CardHeader, CardBody } from "@/components/ui/Card";
 import { DIFFICULTY_META, type TaskDifficulty } from "@/lib/types";
+import { useChartTheme } from "@/hooks/useChartTheme";
 
 interface Props {
   counts: Record<TaskDifficulty, number>;
@@ -18,6 +19,8 @@ const COLORS: Record<TaskDifficulty, string> = {
 };
 
 export function DifficultyBar({ counts }: Props) {
+  const ct = useChartTheme();
+
   const data = {
     labels: ORDER.map((d) => DIFFICULTY_META[d].label),
     datasets: [
@@ -35,7 +38,9 @@ export function DifficultyBar({ counts }: Props) {
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: "rgba(15,23,42,0.92)",
+        backgroundColor: ct.tooltipBg,
+        titleColor: ct.tooltipText,
+        bodyColor: ct.tooltipText,
         padding: 10,
         cornerRadius: 10,
         displayColors: false,
@@ -43,11 +48,11 @@ export function DifficultyBar({ counts }: Props) {
       },
     },
     scales: {
-      x: { grid: { display: false }, ticks: { color: "#64748b", font: { size: 12 } } },
+      x: { grid: { display: false }, ticks: { color: ct.tick, font: { size: 12 } } },
       y: {
         beginAtZero: true,
-        ticks: { precision: 0, color: "#94a3b8", font: { size: 11 } },
-        grid: { color: "#f1f5f9" },
+        ticks: { precision: 0, color: ct.tick, font: { size: 11 } },
+        grid: { color: ct.grid },
         border: { display: false },
       },
     },
@@ -57,8 +62,8 @@ export function DifficultyBar({ counts }: Props) {
   return (
     <Card className="flex h-full flex-col">
       <CardHeader>
-        <h3 className="text-sm font-semibold text-slate-900">Distribusi Kesulitan</h3>
-        <p className="text-xs text-slate-400">Jumlah task per tingkat kesulitan</p>
+        <h3 className="text-sm font-semibold text-foreground">Distribusi Kesulitan</h3>
+        <p className="text-xs text-muted-foreground">Jumlah task per tingkat kesulitan</p>
       </CardHeader>
       <CardBody className="flex-1">
         <div className="h-44">

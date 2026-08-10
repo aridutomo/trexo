@@ -43,7 +43,7 @@ export function KanbanBoard({ tasks, onAdd }: Props) {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="flex gap-4 overflow-x-auto pb-4">
+      <div className="scrollbar-thin flex snap-x gap-4 overflow-x-auto pb-4">
         {STATUS_ORDER.map((status) => {
           const meta = STATUS_META[status];
           const list = byStatus[status];
@@ -54,22 +54,24 @@ export function KanbanBoard({ tasks, onAdd }: Props) {
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                   className={cn(
-                    "flex w-[300px] shrink-0 flex-col rounded-2xl border bg-slate-100/60 transition-colors",
-                    snapshot.isDraggingOver ? "border-brand-300 bg-brand-50/60" : "border-slate-200/70"
+                    "flex w-[280px] shrink-0 snap-start flex-col rounded-2xl border transition-colors sm:w-[300px]",
+                    snapshot.isDraggingOver
+                      ? "border-brand-400 bg-brand-50/60 dark:border-brand-500/40 dark:bg-brand-500/10"
+                      : "border-border bg-muted/50"
                   )}
                 >
                   {/* Header kolom */}
                   <div className="flex items-center justify-between px-3.5 py-3">
                     <div className="flex items-center gap-2">
                       <span className={cn("h-2.5 w-2.5 rounded-full", meta.dot)} />
-                      <span className="text-sm font-semibold text-slate-700">{meta.label}</span>
-                      <span className="rounded-md bg-white px-1.5 py-0.5 text-xs font-medium tabular-nums text-slate-500 ring-1 ring-slate-200">
+                      <span className="text-sm font-semibold text-foreground">{meta.label}</span>
+                      <span className="rounded-md bg-card px-1.5 py-0.5 text-xs font-medium tabular-nums text-muted-foreground ring-1 ring-border">
                         {list.length}
                       </span>
                     </div>
                     <button
                       onClick={() => onAdd(status)}
-                      className="cursor-pointer rounded-md p-1 text-slate-400 transition-colors hover:bg-white hover:text-brand-600"
+                      className="cursor-pointer rounded-md p-1 text-muted-foreground transition-colors hover:bg-card hover:text-brand-600 dark:hover:text-brand-400"
                       title={`Tambah task di ${meta.label}`}
                     >
                       <Plus className="h-4 w-4" />
@@ -79,7 +81,7 @@ export function KanbanBoard({ tasks, onAdd }: Props) {
                   {/* Cards */}
                   <div className="scrollbar-thin flex max-h-[calc(100vh-18rem)] flex-1 flex-col gap-2.5 overflow-y-auto px-2.5 pb-2.5">
                     {list.length === 0 && !snapshot.isDraggingOver && (
-                      <div className="rounded-xl border border-dashed border-slate-300 py-6 text-center text-xs text-slate-400">
+                      <div className="rounded-xl border border-dashed border-border py-6 text-center text-xs text-muted-foreground">
                         Tarik task ke sini
                       </div>
                     )}

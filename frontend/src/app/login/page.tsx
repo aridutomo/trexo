@@ -5,6 +5,7 @@ import { Mail, Lock, ArrowRight, User as UserIcon, CheckCircle2, KanbanSquare, B
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { TrexoLogo, TrexoWordmarkLight } from "@/components/brand/TrexoLogo";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { signInAction, signUpAction, type AuthState } from "./actions";
 
 const highlights = [
@@ -25,19 +26,19 @@ export default function LoginPage() {
   const formAction = mode === "login" ? loginAction : registerAction;
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-background">
       {/* Panel brand */}
       <div className="relative hidden w-1/2 flex-col justify-between overflow-hidden bg-slate-950 p-12 text-white lg:flex">
         <div
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(55% 55% at 15% 12%, rgba(99,102,241,0.55) 0%, transparent 60%), radial-gradient(45% 45% at 88% 28%, rgba(139,92,246,0.35) 0%, transparent 55%), radial-gradient(60% 60% at 70% 95%, rgba(79,70,229,0.45) 0%, transparent 60%)",
+              "radial-gradient(55% 55% at 15% 12%, rgba(59,130,246,0.55) 0%, transparent 60%), radial-gradient(45% 45% at 88% 28%, rgba(96,165,250,0.35) 0%, transparent 55%), radial-gradient(60% 60% at 70% 95%, rgba(37,99,235,0.50) 0%, transparent 60%)",
           }}
         />
         <div
           className="pointer-events-none absolute -left-24 top-1/3 h-72 w-72 rounded-full opacity-30 blur-3xl"
-          style={{ background: "rgba(129,140,248,0.6)" }}
+          style={{ background: "rgba(147,197,253,0.55)" }}
         />
         <div className="relative">
           <TrexoWordmarkLight />
@@ -67,15 +68,18 @@ export default function LoginPage() {
       </div>
 
       {/* Panel form */}
-      <div className="flex w-full flex-col items-center justify-center px-6 lg:w-1/2">
+      <div className="relative flex w-full flex-col items-center justify-center px-6 lg:w-1/2">
+        <div className="absolute right-4 top-4 sm:right-6 sm:top-6">
+          <ThemeToggle />
+        </div>
         <div className="w-full max-w-sm">
           <div className="mb-8 flex flex-col items-center text-center lg:hidden">
             <TrexoLogo className="h-12 w-12" />
           </div>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+          <h2 className="text-2xl font-bold tracking-tight text-foreground">
             {mode === "login" ? "Selamat datang kembali" : "Buat akun baru"}
           </h2>
-          <p className="mt-1.5 text-sm text-slate-500">
+          <p className="mt-1.5 text-sm text-muted-foreground">
             {mode === "login"
               ? "Masuk untuk melanjutkan ke workspace Anda."
               : "Daftar untuk mulai mengatur pekerjaan Anda."}
@@ -112,7 +116,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
+                  className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                   aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
                   tabIndex={-1}
                 >
@@ -123,25 +127,25 @@ export default function LoginPage() {
               required
               minLength={8}
             />
-            {state?.error && <p className="text-sm text-rose-600">{state.error}</p>}
+            {state?.error && <p className="text-sm text-rose-600 dark:text-rose-400">{state.error}</p>}
             <Button type="submit" size="lg" className="w-full" loading={pending}>
               {mode === "login" ? "Masuk" : "Daftar"}
               <ArrowRight className="h-4 w-4" />
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-slate-500">
+          <p className="mt-6 text-center text-sm text-muted-foreground">
             {mode === "login" ? "Belum punya akun? " : "Sudah punya akun? "}
             <button
               type="button"
               onClick={() => setMode(mode === "login" ? "register" : "login")}
-              className="font-semibold text-brand-600 hover:text-brand-700"
+              className="cursor-pointer font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300"
             >
               {mode === "login" ? "Daftar di sini" : "Masuk"}
             </button>
           </p>
 
-          <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50/60 px-4 py-3 text-center text-xs text-slate-500">
+          <div className="mt-6 rounded-xl border border-border bg-muted/50 px-4 py-3 text-center text-xs text-muted-foreground">
             Password minimal 8 karakter. Akun disimpan via better-auth di database MySQL Anda.
           </div>
         </div>

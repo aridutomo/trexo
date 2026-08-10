@@ -64,19 +64,19 @@ export function TaskListView({ tasks, onAdd }: Props) {
     );
 
   const SortIcon = ({ k }: { k: SortKey }) => {
-    if (sort.key !== k) return <ArrowUpDown className="h-3.5 w-3.5 text-slate-300" />;
+    if (sort.key !== k) return <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground/50" />;
     return sort.dir === "asc" ? (
-      <ArrowUp className="h-3.5 w-3.5 text-brand-600" />
+      <ArrowUp className="h-3.5 w-3.5 text-brand-600 dark:text-brand-400" />
     ) : (
-      <ArrowDown className="h-3.5 w-3.5 text-brand-600" />
+      <ArrowDown className="h-3.5 w-3.5 text-brand-600 dark:text-brand-400" />
     );
   };
 
   const Th = ({ k, children, className }: { k: SortKey; children: React.ReactNode; className?: string }) => (
-    <th className={cn("px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500", className)}>
+    <th className={cn("px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground", className)}>
       <button
         onClick={() => toggleSort(k)}
-        className="inline-flex items-center gap-1.5 hover:text-slate-700"
+        className="inline-flex items-center gap-1.5 hover:text-foreground"
       >
         {children}
         <SortIcon k={k} />
@@ -99,26 +99,26 @@ export function TaskListView({ tasks, onAdd }: Props) {
     <div className="space-y-3">
       {/* Search */}
       <div className="relative max-w-sm">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Cari task…"
-          className="h-10 w-full rounded-xl border border-slate-200 bg-white pl-9 pr-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-brand-400 focus:outline-none focus:ring-4 focus:ring-brand-500/10"
+          className="h-10 w-full rounded-xl border border-input bg-card pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-brand-400 focus:outline-none focus:ring-4 focus:ring-brand-500/15"
         />
       </div>
 
       {rows.length === 0 ? (
         <EmptyState icon={<Search className="h-6 w-6" />} title="Tidak ditemukan" description={`Tidak ada task cocok dengan “${search}”.`} />
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card">
+        <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-card">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[760px] border-collapse">
-              <thead className="border-b border-slate-100 bg-slate-50/60">
+              <thead className="border-b border-border bg-muted/50">
                 <tr>
                   <Th k="name">Nama Task</Th>
                   <Th k="difficulty">Kesulitan</Th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                     Sumber Ide
                   </th>
                   <Th k="progress">Progress</Th>
@@ -126,7 +126,7 @@ export function TaskListView({ tasks, onAdd }: Props) {
                   <Th k="dueDate">Jatuh Tempo</Th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-50">
+              <tbody className="divide-y divide-border">
                 {rows.map((t) => {
                   const progress = computeProgress(t);
                   const done = t.steps.filter((s) => s.completed).length;
@@ -135,12 +135,12 @@ export function TaskListView({ tasks, onAdd }: Props) {
                     <tr
                       key={t.id}
                       onClick={() => router.push(`/app/tasks/${t.id}`)}
-                      className="cursor-pointer transition-colors hover:bg-slate-50"
+                      className="cursor-pointer transition-colors hover:bg-muted"
                     >
                       <td className="px-4 py-3">
-                        <div className="text-sm font-medium text-slate-800">{t.name}</div>
+                        <div className="text-sm font-medium text-foreground">{t.name}</div>
                         {t.steps.length > 0 && (
-                          <div className="text-xs text-slate-400">
+                          <div className="text-xs text-muted-foreground">
                             {done}/{t.steps.length} steps
                           </div>
                         )}
@@ -154,7 +154,7 @@ export function TaskListView({ tasks, onAdd }: Props) {
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
                           <Progress value={progress} size="sm" className="w-24" />
-                          <span className="w-9 text-xs font-medium tabular-nums text-slate-500">
+                          <span className="w-9 text-xs font-medium tabular-nums text-muted-foreground">
                             {progress}%
                           </span>
                         </div>
@@ -164,11 +164,11 @@ export function TaskListView({ tasks, onAdd }: Props) {
                       </td>
                       <td className="px-4 py-3 text-sm">
                         {t.dueDate ? (
-                          <span className={cn(overdue && "font-medium text-rose-500")}>
+                          <span className={cn(overdue && "font-medium text-rose-500 dark:text-rose-400")}>
                             {formatDate(t.dueDate, "d MMM yyyy")}
                           </span>
                         ) : (
-                          <span className="text-slate-300">—</span>
+                          <span className="text-muted-foreground/50">—</span>
                         )}
                       </td>
                     </tr>

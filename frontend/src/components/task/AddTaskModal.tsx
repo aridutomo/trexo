@@ -23,9 +23,24 @@ const sources: { value: TaskSource; label: string; icon: React.ReactNode }[] = [
 ];
 
 const difficulties: { value: TaskDifficulty; label: string; ring: string }[] = [
-  { value: "easy", label: "Mudah", ring: "data-[on=true]:border-emerald-500 data-[on=true]:bg-emerald-50 data-[on=true]:text-emerald-700" },
-  { value: "medium", label: "Medium", ring: "data-[on=true]:border-amber-500 data-[on=true]:bg-amber-50 data-[on=true]:text-amber-700" },
-  { value: "hard", label: "Susah", ring: "data-[on=true]:border-rose-500 data-[on=true]:bg-rose-50 data-[on=true]:text-rose-700" },
+  {
+    value: "easy",
+    label: "Mudah",
+    ring:
+      "data-[on=true]:border-emerald-500 data-[on=true]:bg-emerald-50 data-[on=true]:text-emerald-700 dark:data-[on=true]:bg-emerald-500/15 dark:data-[on=true]:text-emerald-300",
+  },
+  {
+    value: "medium",
+    label: "Medium",
+    ring:
+      "data-[on=true]:border-amber-500 data-[on=true]:bg-amber-50 data-[on=true]:text-amber-700 dark:data-[on=true]:bg-amber-500/15 dark:data-[on=true]:text-amber-300",
+  },
+  {
+    value: "hard",
+    label: "Susah",
+    ring:
+      "data-[on=true]:border-rose-500 data-[on=true]:bg-rose-50 data-[on=true]:text-rose-700 dark:data-[on=true]:bg-rose-500/15 dark:data-[on=true]:text-rose-300",
+  },
 ];
 
 const empty = { name: "", description: "", source: "own_idea" as TaskSource, difficulty: "medium" as TaskDifficulty, steps: [""] };
@@ -99,14 +114,14 @@ export function AddTaskModal({ open, onClose, projectId, defaultStatus = "todo",
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {/* Sumber ide */}
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-slate-700">Sumber Ide</label>
+            <label className="mb-1.5 block text-sm font-medium text-foreground">Sumber Ide</label>
             <div className="grid grid-cols-2 gap-2">
               {sources.map((o) => (
                 <button
                   key={o.value}
                   onClick={() => setForm((f) => ({ ...f, source: o.value }))}
                   data-on={form.source === o.value}
-                  className="flex cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-slate-200 px-2 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 data-[on=true]:border-brand-500 data-[on=true]:bg-brand-50 data-[on=true]:text-brand-700"
+                  className="flex cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-input px-2 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted data-[on=true]:border-brand-500 data-[on=true]:bg-brand-50 data-[on=true]:text-brand-700 dark:data-[on=true]:bg-brand-500/15 dark:data-[on=true]:text-brand-300"
                 >
                   {o.icon}
                   {o.label}
@@ -117,7 +132,7 @@ export function AddTaskModal({ open, onClose, projectId, defaultStatus = "todo",
 
           {/* Kesulitan */}
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-slate-700">Tingkat Kesulitan</label>
+            <label className="mb-1.5 block text-sm font-medium text-foreground">Tingkat Kesulitan</label>
             <div className="grid grid-cols-3 gap-2">
               {difficulties.map((o) => (
                 <button
@@ -125,7 +140,7 @@ export function AddTaskModal({ open, onClose, projectId, defaultStatus = "todo",
                   onClick={() => setForm((f) => ({ ...f, difficulty: o.value }))}
                   data-on={form.difficulty === o.value}
                   className={cn(
-                    "cursor-pointer rounded-xl border border-slate-200 px-2 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50",
+                    "cursor-pointer rounded-xl border border-input px-2 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted",
                     o.ring
                   )}
                 >
@@ -138,13 +153,13 @@ export function AddTaskModal({ open, onClose, projectId, defaultStatus = "todo",
 
         {/* Steps awal */}
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-slate-700">
-            Steps Awal <span className="font-normal text-slate-400">(opsional)</span>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">
+            Steps Awal <span className="font-normal text-muted-foreground">(opsional)</span>
           </label>
           <div className="space-y-2">
             {form.steps.map((step, i) => (
               <div key={i} className="flex items-center gap-2">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-slate-100 text-xs font-medium text-slate-500">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-muted text-xs font-medium text-muted-foreground">
                   {i + 1}
                 </span>
                 <input
@@ -162,12 +177,12 @@ export function AddTaskModal({ open, onClose, projectId, defaultStatus = "todo",
                     }
                   }}
                   placeholder={`Langkah ${i + 1}`}
-                  className="h-9 flex-1 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-800 focus:border-brand-400 focus:outline-none focus:ring-4 focus:ring-brand-500/10"
+                  className="h-9 flex-1 rounded-xl border border-input bg-card px-3 text-sm text-foreground focus:border-brand-400 focus:outline-none focus:ring-4 focus:ring-brand-500/15"
                 />
                 {form.steps.length > 1 && (
                   <button
                     onClick={() => setForm((f) => ({ ...f, steps: f.steps.filter((_, idx) => idx !== i) }))}
-                    className="rounded-md p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-500"
+                    className="cursor-pointer rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-rose-50 hover:text-rose-500 dark:hover:bg-rose-500/10 dark:hover:text-rose-400"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -177,7 +192,7 @@ export function AddTaskModal({ open, onClose, projectId, defaultStatus = "todo",
           </div>
           <button
             onClick={() => setForm((f) => ({ ...f, steps: [...f.steps, ""] }))}
-            className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:text-brand-700"
+            className="mt-2 inline-flex cursor-pointer items-center gap-1.5 text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300"
           >
             <Plus className="h-4 w-4" />
             Tambah step

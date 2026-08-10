@@ -15,15 +15,15 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    "bg-brand-600 text-white shadow-soft hover:bg-brand-700 active:bg-brand-800 focus-visible:ring-brand-500",
+    "bg-brand-600 text-white shadow-soft hover:bg-brand-700 active:bg-brand-800 dark:bg-brand-600 dark:hover:bg-brand-500 focus-visible:ring-brand-500",
   secondary:
-    "bg-slate-900 text-white shadow-soft hover:bg-slate-800 active:bg-slate-950 focus-visible:ring-slate-500",
+    "bg-slate-900 text-white shadow-soft hover:bg-slate-800 active:bg-slate-950 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white focus-visible:ring-slate-500",
   outline:
-    "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-400 focus-visible:ring-brand-500",
-  ghost: "text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus-visible:ring-slate-400",
+    "border border-input bg-card text-foreground hover:bg-muted hover:border-slate-300 dark:hover:border-slate-600 focus-visible:ring-brand-500",
+  ghost: "text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-slate-400",
   danger:
-    "bg-rose-600 text-white shadow-soft hover:bg-rose-700 active:bg-rose-800 focus-visible:ring-rose-500",
-  subtle: "bg-brand-50 text-brand-700 hover:bg-brand-100 focus-visible:ring-brand-400",
+    "bg-rose-600 text-white shadow-soft hover:bg-rose-700 active:bg-rose-800 dark:bg-rose-600 dark:hover:bg-rose-500 focus-visible:ring-rose-500",
+  subtle: "bg-brand-50 text-brand-700 hover:bg-brand-100 dark:bg-brand-500/15 dark:text-brand-300 dark:hover:bg-brand-500/20 focus-visible:ring-brand-400",
 };
 
 const sizeClasses: Record<Size, string> = {
@@ -40,7 +40,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         disabled={disabled || loading}
         className={cn(
-          "inline-flex cursor-pointer select-none items-center justify-center whitespace-nowrap font-medium transition-all duration-150 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+          "inline-flex cursor-pointer select-none items-center justify-center whitespace-nowrap font-medium transition-all duration-150 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50",
           variantClasses[variant],
           sizeClasses[size],
           className

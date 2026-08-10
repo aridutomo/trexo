@@ -81,9 +81,9 @@ export default function ReportPage() {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900">Report</h2>
-          <p className="mt-1 text-sm text-slate-500">
-            Rekapitulasi task di workspace <span className="font-medium text-slate-700">{wsName}</span>.
+          <h2 className="text-2xl font-bold tracking-tight text-foreground">Report</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Rekapitulasi task di workspace <span className="font-medium text-foreground">{wsName}</span>.
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -101,12 +101,12 @@ export default function ReportPage() {
       {/* Filters */}
       <Card>
         <CardHeader className="flex items-center gap-2">
-          <Filter className="h-4 w-4 text-slate-400" />
-          <span className="text-sm font-semibold text-slate-900">Filter</span>
+          <Filter className="h-4 w-4 text-muted-foreground" />
+          <span className="text-sm font-semibold text-foreground">Filter</span>
           {hasFilters && (
             <button
               onClick={reset}
-              className="ml-auto inline-flex items-center gap-1 text-xs font-medium text-brand-600 hover:text-brand-700"
+              className="ml-auto inline-flex cursor-pointer items-center gap-1 text-xs font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300"
             >
               <RotateCcw className="h-3.5 w-3.5" />
               Reset
@@ -155,21 +155,21 @@ export default function ReportPage() {
               ]}
             />
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">Dari Tanggal</label>
+              <label className="mb-1.5 block text-sm font-medium text-foreground">Dari Tanggal</label>
               <input
                 type="date"
                 value={dateFrom}
                 onChange={(e) => setDateFrom(e.target.value)}
-                className="h-10 w-full cursor-pointer rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 transition-colors focus:border-brand-400 focus:outline-none focus:ring-4 focus:ring-brand-500/10"
+                className="h-10 w-full cursor-pointer rounded-xl border border-input bg-card px-3 text-sm text-foreground transition-colors [color-scheme:light] focus:border-brand-400 focus:outline-none focus:ring-4 focus:ring-brand-500/15 dark:[color-scheme:dark]"
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">Sampai Tanggal</label>
+              <label className="mb-1.5 block text-sm font-medium text-foreground">Sampai Tanggal</label>
               <input
                 type="date"
                 value={dateTo}
                 onChange={(e) => setDateTo(e.target.value)}
-                className="h-10 w-full cursor-pointer rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 transition-colors focus:border-brand-400 focus:outline-none focus:ring-4 focus:ring-brand-500/10"
+                className="h-10 w-full cursor-pointer rounded-xl border border-input bg-card px-3 text-sm text-foreground transition-colors [color-scheme:light] focus:border-brand-400 focus:outline-none focus:ring-4 focus:ring-brand-500/15 dark:[color-scheme:dark]"
               />
             </div>
           </div>
@@ -185,7 +185,7 @@ export default function ReportPage() {
       ) : (
         <>
           {/* Summary cards */}
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
             <StatCard label="Total Task" value={summary.total} icon={<BarChart3 className="h-5 w-5" />} tone="brand" />
             <StatCard label="Selesai" value={summary.doneCount} hint={`${Math.round((summary.doneCount / summary.total) * 100)}% selesai`} icon={<BarChart3 className="h-5 w-5" />} tone="emerald" />
             <StatCard label="Dalam Proses" value={summary.byStatus.in_progress + summary.byStatus.review} icon={<BarChart3 className="h-5 w-5" />} tone="amber" />
@@ -202,31 +202,31 @@ export default function ReportPage() {
           <Card>
             <CardHeader className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-semibold text-slate-900">Preview Rekapitulasi</h3>
-                <p className="text-xs text-slate-400">{filtered.length} task · {projectName}</p>
+                <h3 className="text-sm font-semibold text-foreground">Preview Rekapitulasi</h3>
+                <p className="text-xs text-muted-foreground">{filtered.length} task · {projectName}</p>
               </div>
             </CardHeader>
             <CardBody className="p-0">
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[860px] border-collapse text-sm">
                   <thead>
-                    <tr className="border-b border-slate-100 bg-slate-50/60 text-left">
-                      <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Task</th>
-                      <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Status</th>
-                      <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Kesulitan</th>
-                      <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Sumber</th>
-                      <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Progress</th>
-                      <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Jatuh Tempo</th>
+                    <tr className="border-b border-border bg-muted/50 text-left">
+                      <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Task</th>
+                      <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Status</th>
+                      <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Kesulitan</th>
+                      <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Sumber</th>
+                      <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Progress</th>
+                      <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Jatuh Tempo</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-50">
+                  <tbody className="divide-y divide-border">
                     {filtered.map((t) => {
                       const p = wsProjects.find((pr) => pr.id === t.projectId);
                       return (
-                        <tr key={t.id} className="hover:bg-slate-50">
+                        <tr key={t.id} className="transition-colors hover:bg-muted">
                           <td className="px-4 py-3">
-                            <div className="font-medium text-slate-800">{t.name}</div>
-                            <div className="text-xs text-slate-400">{p?.icon} {p?.name}</div>
+                            <div className="font-medium text-foreground">{t.name}</div>
+                            <div className="text-xs text-muted-foreground">{p?.icon} {p?.name}</div>
                           </td>
                           <td className="px-4 py-3"><StatusBadge status={t.status} dot={false} /></td>
                           <td className="px-4 py-3"><DifficultyBadge difficulty={t.difficulty} /></td>
@@ -234,11 +234,11 @@ export default function ReportPage() {
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
                               <Progress value={computeProgress(t)} size="sm" className="w-20" />
-                              <span className="text-xs tabular-nums text-slate-500">{computeProgress(t)}%</span>
+                              <span className="text-xs tabular-nums text-muted-foreground">{computeProgress(t)}%</span>
                             </div>
                           </td>
-                          <td className="px-4 py-3 text-slate-600">
-                            {t.dueDate ? formatDate(t.dueDate, "d MMM yyyy") : <span className="text-slate-300">—</span>}
+                          <td className="px-4 py-3 text-muted-foreground">
+                            {t.dueDate ? formatDate(t.dueDate, "d MMM yyyy") : <span className="text-muted-foreground/50">—</span>}
                           </td>
                         </tr>
                       );

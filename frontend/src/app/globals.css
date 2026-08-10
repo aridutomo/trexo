@@ -2,38 +2,99 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   Design tokens — semantic, theme-aware (RGB triples so they
+   compose with Tailwind's alpha channel: rgb(var(--x) / a))
+   ============================================================ */
 :root {
-  /* App surfaces (RGB triples) */
-  --app-bg: 248 250 252; /* slate-50 — app background */
-  --surface: 255 255 255; /* cards / panels */
-  --surface-2: 241 245 249; /* slate-100 — subtle fill */
+  --background: 248 250 252; /* slate-50 — app canvas */
+  --foreground: 15 23 42; /* slate-900 */
+
+  --card: 255 255 255;
+  --card-foreground: 15 23 42;
+
+  --popover: 255 255 255;
+  --popover-foreground: 15 23 42;
+
+  --muted: 241 245 249; /* slate-100 */
+  --muted-foreground: 100 116 139; /* slate-500 */
+
+  --accent: 239 246 255; /* blue-50 — subtle brand tint */
+  --accent-foreground: 29 78 216; /* blue-700 */
+
   --border: 226 232 240; /* slate-200 */
-  --border-subtle: 241 245 249; /* slate-100 */
-  --muted: 100 116 139; /* slate-500 */
-  --ring: 33 150 243; /* blue-500 */
-  --brand: 30 136 229; /* blue-600 */
+  --input: 226 232 240;
+  --ring: 37 99 235; /* blue-600 */
+
+  --primary: 37 99 235; /* blue-600 */
+  --primary-foreground: 255 255 255;
+
+  --destructive: 225 29 72; /* rose-600 */
+
+  /* Sidebar / shell surface tint */
+  --sidebar: 255 255 255;
+  --sidebar-border: 226 232 240;
+}
+
+.dark {
+  --background: 8 10 16; /* #080A10 */
+  --foreground: 226 232 240; /* slate-200 */
+
+  --card: 15 19 26; /* #0F131A */
+  --card-foreground: 226 232 240;
+
+  --popover: 18 23 31; /* elevated above card */
+  --popover-foreground: 226 232 240;
+
+  --muted: 23 28 36; /* #171C24 */
+  --muted-foreground: 148 163 184; /* slate-400 */
+
+  --accent: 30 58 138; /* blue-900 — tinted dark surface */
+  --accent-foreground: 147 197 253; /* blue-300 */
+
+  --border: 33 40 51; /* hairline #212833 */
+  --input: 33 40 51;
+  --ring: 59 130 246; /* blue-500 */
+
+  --primary: 59 130 246; /* blue-500, brighter on dark */
+  --primary-foreground: 255 255 255;
+
+  --destructive: 244 63 94; /* rose-500 */
+
+  --sidebar: 11 15 22; /* slightly above canvas */
+  --sidebar-border: 33 40 51;
 }
 
 @layer base {
+  /* Default border colour follows the token */
   * {
-    @apply border-slate-200;
+    border-color: rgb(var(--border));
+    /* Focus-ring offset blends with the surface instead of pure white */
+    --tw-ring-offset-color: rgb(var(--background));
   }
+
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    color-scheme: light;
   }
+  html.dark {
+    color-scheme: dark;
+  }
+
   body {
-    @apply bg-slate-50 text-slate-900;
+    background-color: rgb(var(--background));
+    color: rgb(var(--foreground));
     font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01";
   }
-  /* Display font for headings + numerics */
+
   h1,
   h2,
   h3 {
     font-family: var(--font-display), system-ui, sans-serif;
   }
-  /* Tabular figures for numbers / data */
+
   .tabular-nums {
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum";
@@ -41,14 +102,10 @@
 }
 
 @layer components {
-  /* Glass / frosted surface — used by topbar + mobile bottom nav */
+  /* Glass / frosted surface — used by topbar + mobile bottom nav.
+     Adapts to theme via the token so it reads correctly on both. */
   .glass {
-    background-color: rgb(255 255 255 / 0.72);
-    -webkit-backdrop-filter: saturate(180%) blur(16px);
-    backdrop-filter: saturate(180%) blur(16px);
-  }
-  .glass-dark {
-    background-color: rgb(15 23 42 / 0.72);
+    background-color: rgb(var(--card) / 0.72);
     -webkit-backdrop-filter: saturate(180%) blur(16px);
     backdrop-filter: saturate(180%) blur(16px);
   }
@@ -56,17 +113,18 @@
   /* Scrollbars */
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: rgb(203 213 225) transparent;
+    scrollbar-color: rgb(var(--muted-foreground) / 0.35) transparent;
   }
   .scrollbar-thin::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    @apply rounded-full bg-slate-300/80;
+    border-radius: 9999px;
+    background-color: rgb(var(--muted-foreground) / 0.3);
   }
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    @apply bg-slate-400;
+    background-color: rgb(var(--muted-foreground) / 0.5);
   }
   .scrollbar-thin::-webkit-scrollbar-track {
     background: transparent;
