@@ -1,0 +1,54 @@
+# Trexo full-stack deployment: Frontend (Next.js) + Backend (Go)
+# Production deployment for trexo.anaki.id
+# Uses external MySQL (mysql-server) on web-network
+services:
+  # Backend API (Go)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: trexo-backend
+    restart: unless-stopped
+    environment:
+      PORT: "8080"
+      GO_ENV: production
+      DSN: "root:${MYSQL_ROOT_PASSWORD}@tcp(mysql-server:3306)/trexo?parseTime=true&loc=UTC&charset=utf8mb4&multiStatements=true"
+      ALLOWED_ORIGINS: "${ALLOWED_ORIGINS:-https://trexo.anaki.id,http://localhost:3000}"
+      BFF_API_KEYS: "${BFF_API_KEYS:-}"
+      RUN_MIGRATIONS: "true"
+    expose:
+      - "8080"
+    networks:
+      - web-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # Frontend (Next.js)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: trexo-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: "mysql://root:${MYSQL_ROOT_PASSWORD}@mysql-server:3306/trexo"
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      BETTER_AUTH_URL: https://trexo.anaki.id
+      NEXT_PUBLIC_APP_URL: https://trexo.anaki.id
+      GO_API_URL: http://trexo-backend:8080
+      GO_API_KEY: ${GO_API_KEY:-}
+    expose:
+      - "3000"
+    networks:
+      - web-network
+
+networks:
+  web-network:
+    external: true
