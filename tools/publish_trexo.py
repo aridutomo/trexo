@@ -17,6 +17,13 @@ import json
 import time
 from pathlib import Path
 
+# Pastikan emoji/unicode (📄 ✅ dll) tampil di Windows console (default cp1252)
+try:
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+except Exception:
+    pass
+
 # ==================== KONFIGURASI ====================
 # Kredensial Jenkins (URL, user, token) WAJIB diisi via environment variable
 # atau file .env — JANGAN hardcode di sini. Lihat tools/.env.example untuk template.
@@ -38,7 +45,12 @@ class JenkinsPublisher:
             response = requests.get(f"{self.url}/api/json", auth=self.auth, timeout=10)
 
             if response.status_code == 200:
-                print(f"✅ Connection successful! Jenkins version: {response.json().get('description', 'unknown')}")
+                data = response.json()
+                version = response.headers.get('X-Jenkins', 'unknown')
+                jobs = len(data.get('jobs', []))
+                print("✅ Connection successful!")
+                print(f"   Jenkins version: {version}")
+                print(f"   Jobs available : {jobs}")
                 return True
             else:
                 print(f"❌ Connection failed: {response.status_code}")
