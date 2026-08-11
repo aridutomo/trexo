@@ -1,11 +1,11 @@
 # Stage 1: Install dependencies
-FROM node:20-alpine AS deps
+FROM node:22-alpine AS deps
 WORKDIR /app
-COPY package*.json ./
-RUN npm ci
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
 # Stage 2: Build the app
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -15,10 +15,10 @@ ENV DATABASE_URL=mysql://trexo:trexo@localhost:3306/trexo
 ENV BETTER_AUTH_SECRET=build-time-secret-only
 ENV BETTER_AUTH_URL=http://localhost:3000
 
-RUN npm run build
+RUN yarn build
 
 # Stage 3: Production runner
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
