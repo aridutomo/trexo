@@ -151,9 +151,9 @@ export default function TaskDetailPage() {
               value={desc}
               onChange={(e) => setDesc(e.target.value)}
               onBlur={commitDesc}
-              rows={3}
+              rows={6}
               placeholder="Tambahkan deskripsi…"
-              className="mt-2 w-full resize-none rounded-xl border border-transparent bg-transparent px-2 py-1 text-sm text-muted-foreground outline-none transition-colors placeholder:text-muted-foreground/70 hover:bg-muted focus:border-brand-300 focus:bg-card focus:ring-4 focus:ring-brand-500/15"
+              className="mt-2 w-full resize-y rounded-xl border border-transparent bg-transparent px-2 py-1 text-sm text-muted-foreground outline-none transition-colors placeholder:text-muted-foreground/70 hover:bg-muted focus:border-brand-300 focus:bg-card focus:ring-4 focus:ring-brand-500/15"
             />
           </div>
 

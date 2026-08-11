@@ -35,22 +35,34 @@ const sourceTone: Record<TaskSource, "sky" | "violet"> = {
   user_request: "violet",
 };
 
-export function StatusBadge({ status, dot = true }: { status: TaskStatus; dot?: boolean }) {
+// An enum value from the backend may be absent or unrecognized when the schema
+// lags the frontend (e.g. the priority column not yet migrated, or stale data).
+// Return the key only when it actually exists in the lookup map, else a safe
+// default — so one bad record can never crash the whole board.
+function resolveKey<K extends string>(map: Record<K, unknown>, key: string | undefined, fallback: NoInfer<K>): K {
+  return key != null && key in map ? (key as K) : fallback;
+}
+
+export function StatusBadge({ status, dot = true }: { status?: TaskStatus; dot?: boolean }) {
+  const s = resolveKey(STATUS_META, status, "todo");
   return (
-    <Badge tone={statusTone[status]} dot={dot}>
-      {STATUS_META[status].label}
+    <Badge tone={statusTone[s]} dot={dot}>
+      {STATUS_META[s].label}
     </Badge>
   );
 }
 
-export function DifficultyBadge({ difficulty }: { difficulty: TaskDifficulty }) {
-  return <Badge tone={difficultyTone[difficulty]}>{DIFFICULTY_META[difficulty].label}</Badge>;
+export function DifficultyBadge({ difficulty }: { difficulty?: TaskDifficulty }) {
+  const d = resolveKey(DIFFICULTY_META, difficulty, "medium");
+  return <Badge tone={difficultyTone[d]}>{DIFFICULTY_META[d].label}</Badge>;
 }
 
-export function PriorityBadge({ priority }: { priority: TaskPriority }) {
-  return <Badge tone={priorityTone[priority]} dot={priority === "urgent"}>{PRIORITY_META[priority].label}</Badge>;
+export function PriorityBadge({ priority }: { priority?: TaskPriority }) {
+  const p = resolveKey(PRIORITY_META, priority, "medium");
+  return <Badge tone={priorityTone[p]} dot={p === "urgent"}>{PRIORITY_META[p].label}</Badge>;
 }
 
-export function SourceBadge({ source }: { source: TaskSource }) {
-  return <Badge tone={sourceTone[source]}>{SOURCE_META[source].label}</Badge>;
+export function SourceBadge({ source }: { source?: TaskSource }) {
+  const src = resolveKey(SOURCE_META, source, "own_idea");
+  return <Badge tone={sourceTone[src]}>{SOURCE_META[src].label}</Badge>;
 }

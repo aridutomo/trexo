@@ -104,6 +104,13 @@ type Task struct {
 // ToDTO shapes the task. steps may be nil (task.update/task.move return steps:[]);
 // the Steps slice is always non-nil so JSON renders [] (parity with gas/Task.gs).
 func (t Task) ToDTO(steps []Step) domain.TaskDTO {
+	// Priority may be empty if the ms_task.priority column hasn't been migrated
+	// yet (migration 000002 adds it). Never expose an invalid value to clients —
+	// fall back to the default so the frontend never sees an empty priority.
+	priority := t.Priority
+	if !domain.IsValidPriority(priority) {
+		priority = domain.PriorityMedium
+	}
 	out := domain.TaskDTO{
 		ID:          t.TaskID,
 		ProjectID:   t.ProjectID,
@@ -112,7 +119,7 @@ func (t Task) ToDTO(steps []Step) domain.TaskDTO {
 		Status:      t.Status,
 		Source:      t.Source,
 		Difficulty:  t.Difficulty,
-		Priority:    t.Priority,
+		Priority:    priority,
 		Steps:       []domain.StepDTO{},
 		CreatedAt:   t.CreatedTime.UTC().Format(time.RFC3339Nano),
 		UpdatedAt:   t.ModifiedTime.UTC().Format(time.RFC3339Nano),
