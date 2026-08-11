@@ -17,6 +17,11 @@ const (
 	DifficultyMedium = "medium"
 	DifficultyHard   = "hard"
 
+	PriorityLow    = "low"
+	PriorityMedium = "medium"
+	PriorityHigh   = "high"
+	PriorityUrgent = "urgent"
+
 	TypePersonal = "personal"
 	TypeCompany  = "company"
 )
@@ -36,6 +41,14 @@ func IsValidSource(s string) bool {
 func IsValidDifficulty(s string) bool {
 	switch s {
 	case DifficultyEasy, DifficultyMedium, DifficultyHard:
+		return true
+	}
+	return false
+}
+
+func IsValidPriority(s string) bool {
+	switch s {
+	case PriorityLow, PriorityMedium, PriorityHigh, PriorityUrgent:
 		return true
 	}
 	return false

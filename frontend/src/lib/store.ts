@@ -5,6 +5,7 @@ import type {
   Project,
   Task,
   TaskDifficulty,
+  TaskPriority,
   TaskSource,
   TaskStatus,
   TaskStep,
@@ -62,6 +63,7 @@ interface TrexoState {
     status?: TaskStatus;
     source: TaskSource;
     difficulty: TaskDifficulty;
+    priority: TaskPriority;
     steps?: string[];
   }) => Promise<Task>;
   updateTask: (id: string, patch: Partial<Task>) => Promise<void>;
@@ -193,7 +195,7 @@ export const useTrexo = create<TrexoState>()((set, get) => ({
   setActiveProject: (id) => set({ activeProjectId: id }),
 
   // ---------------------------------------------------------------- task
-  addTask: async ({ projectId, name, description = "", status = "todo", source, difficulty, steps = [] }) => {
+  addTask: async ({ projectId, name, description = "", status = "todo", source, difficulty, priority, steps = [] }) => {
     const task = await api.task.create({
       projectId,
       name,
@@ -201,6 +203,7 @@ export const useTrexo = create<TrexoState>()((set, get) => ({
       status,
       source,
       difficulty,
+      priority,
       steps,
     });
     set((s) => ({ tasks: [...s.tasks, task] }));

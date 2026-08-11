@@ -87,6 +87,7 @@ export const seedTasks: Task[] = [
     status: "done",
     source: "own_idea",
     difficulty: "medium",
+    priority: "medium",
     steps: [
       { id: "s1", name: "Mood board & referensi", completed: true },
       { id: "s2", name: "Wireframe hi-fi", completed: true },
@@ -105,6 +106,7 @@ export const seedTasks: Task[] = [
     status: "in_progress",
     source: "own_idea",
     difficulty: "hard",
+    priority: "medium",
     steps: [
       { id: "s5", name: "Setup proyek Sanity", completed: true },
       { id: "s6", name: "Definisikan schema konten", completed: true },
@@ -125,6 +127,7 @@ export const seedTasks: Task[] = [
     status: "todo",
     source: "user_request",
     difficulty: "easy",
+    priority: "medium",
     steps: [],
     assigneeId: "u_ari",
     createdAt: "2026-07-29T08:00:00.000Z",
@@ -139,6 +142,7 @@ export const seedTasks: Task[] = [
     status: "review",
     source: "own_idea",
     difficulty: "hard",
+    priority: "medium",
     steps: [
       { id: "s10", name: "Pelajari ownership & borrowing", completed: true },
       { id: "s11", name: "Integrasi crate image", completed: true },
@@ -157,6 +161,7 @@ export const seedTasks: Task[] = [
     status: "todo",
     source: "own_idea",
     difficulty: "medium",
+    priority: "medium",
     steps: [],
     assigneeId: "u_ari",
     createdAt: "2026-07-28T08:00:00.000Z",
@@ -171,6 +176,7 @@ export const seedTasks: Task[] = [
     status: "in_progress",
     source: "user_request",
     difficulty: "hard",
+    priority: "medium",
     steps: [
       { id: "s14", name: "Desain payload pesan", completed: true },
       { id: "s15", name: "Implementasi server WS", completed: false },
@@ -189,6 +195,7 @@ export const seedTasks: Task[] = [
     status: "review",
     source: "user_request",
     difficulty: "medium",
+    priority: "medium",
     steps: [
       { id: "s17", name: "Pilih library charting", completed: true },
       { id: "s18", name: "Bind data ke props", completed: true },
@@ -208,6 +215,7 @@ export const seedTasks: Task[] = [
     status: "done",
     source: "user_request",
     difficulty: "medium",
+    priority: "medium",
     steps: [
       { id: "s22", name: "Daftar OAuth credentials", completed: true },
       { id: "s23", name: "Alur callback", completed: true },
@@ -224,6 +232,7 @@ export const seedTasks: Task[] = [
     status: "todo",
     source: "user_request",
     difficulty: "easy",
+    priority: "medium",
     steps: [],
     assigneeId: "u_ari",
     dueDate: "2026-08-02T23:59:00.000Z",
@@ -239,6 +248,7 @@ export const seedTasks: Task[] = [
     status: "in_progress",
     source: "own_idea",
     difficulty: "medium",
+    priority: "medium",
     steps: [
       { id: "s24", name: "Audit layar eksisting", completed: true },
       { id: "s25", name: "Setup Expo Router", completed: true },
@@ -257,6 +267,7 @@ export const seedTasks: Task[] = [
     status: "todo",
     source: "user_request",
     difficulty: "easy",
+    priority: "medium",
     steps: [],
     assigneeId: "u_ari",
     createdAt: "2026-07-25T08:00:00.000Z",

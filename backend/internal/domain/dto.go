@@ -42,6 +42,7 @@ type TaskDTO struct {
 	Status      string    `json:"status"`
 	Source      string    `json:"source"`
 	Difficulty  string    `json:"difficulty"`
+	Priority    string    `json:"priority"`
 	Steps       []StepDTO `json:"steps"`
 	AssigneeID  string    `json:"assigneeId,omitempty"`
 	DueDate     string    `json:"dueDate,omitempty"`

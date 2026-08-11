@@ -10,6 +10,8 @@ export type TaskSource = "own_idea" | "user_request";
 
 export type TaskDifficulty = "easy" | "medium" | "hard";
 
+export type TaskPriority = "low" | "medium" | "high" | "urgent";
+
 export interface User {
   id: string;
   name: string;
@@ -59,6 +61,7 @@ export interface Task {
   status: TaskStatus;
   source: TaskSource;
   difficulty: TaskDifficulty;
+  priority: TaskPriority;
   steps: TaskStep[];
   assigneeId?: string;
   dueDate?: string;
@@ -135,12 +138,48 @@ export const DIFFICULTY_META: Record<
   },
 };
 
+export const PRIORITY_META: Record<
+  TaskPriority,
+  { label: string; bg: string; text: string; ring: string; value: number }
+> = {
+  low: {
+    label: "Rendah",
+    bg: "bg-blue-50 dark:bg-blue-500/15",
+    text: "text-blue-700 dark:text-blue-300",
+    ring: "ring-blue-200 dark:ring-blue-500/20",
+    value: 1,
+  },
+  medium: {
+    label: "Sedang",
+    bg: "bg-amber-50 dark:bg-amber-500/15",
+    text: "text-amber-700 dark:text-amber-300",
+    ring: "ring-amber-200 dark:ring-amber-500/20",
+    value: 2,
+  },
+  high: {
+    label: "Tinggi",
+    bg: "bg-orange-50 dark:bg-orange-500/15",
+    text: "text-orange-700 dark:text-orange-300",
+    ring: "ring-orange-200 dark:ring-orange-500/20",
+    value: 3,
+  },
+  urgent: {
+    label: "Darurat",
+    bg: "bg-rose-50 dark:bg-rose-500/15",
+    text: "text-rose-700 dark:text-rose-300",
+    ring: "ring-rose-200 dark:ring-rose-500/20",
+    value: 4,
+  },
+};
+
 export const SOURCE_META: Record<TaskSource, { label: string; bg: string; text: string }> = {
   own_idea: { label: "Ide Sendiri", bg: "bg-sky-50 dark:bg-sky-500/15", text: "text-sky-700 dark:text-sky-300" },
   user_request: { label: "Permintaan User", bg: "bg-violet-50 dark:bg-violet-500/15", text: "text-violet-700 dark:text-violet-300" },
 };
 
 export const STATUS_ORDER: TaskStatus[] = ["todo", "in_progress", "review", "done"];
+
+export const PRIORITY_ORDER: TaskPriority[] = ["low", "medium", "high", "urgent"];
 
 // Persentase fallback ketika task TIDAK punya steps
 export const STATUS_FALLBACK_PROGRESS: Record<TaskStatus, number> = {

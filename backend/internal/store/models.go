@@ -91,6 +91,7 @@ type Task struct {
 	Status       string         `db:"status"`
 	Source       string         `db:"source"`
 	Difficulty   string         `db:"difficulty"`
+	Priority     string         `db:"priority"`
 	AssigneeID   sql.NullString `db:"assignee_id"`
 	DueDate      sql.NullTime   `db:"due_date"`
 	CreatedBy    sql.NullString `db:"created_by"`
@@ -111,6 +112,7 @@ func (t Task) ToDTO(steps []Step) domain.TaskDTO {
 		Status:      t.Status,
 		Source:      t.Source,
 		Difficulty:  t.Difficulty,
+		Priority:    t.Priority,
 		Steps:       []domain.StepDTO{},
 		CreatedAt:   t.CreatedTime.UTC().Format(time.RFC3339Nano),
 		UpdatedAt:   t.ModifiedTime.UTC().Format(time.RFC3339Nano),

@@ -4,7 +4,7 @@ import { Draggable } from "@hello-pangea/dnd";
 import type { DraggableProvided, DraggableStateSnapshot } from "@hello-pangea/dnd";
 import { useRouter } from "next/navigation";
 import { CalendarClock, MessageSquare, GripVertical } from "lucide-react";
-import { DifficultyBadge, SourceBadge } from "@/components/task/badges";
+import { DifficultyBadge, PriorityBadge, SourceBadge } from "@/components/task/badges";
 import { Progress } from "@/components/ui/Progress";
 import { computeProgress, formatDate, cn, isOverdue } from "@/lib/utils";
 import type { Task } from "@/lib/types";
@@ -41,6 +41,7 @@ export function KanbanCard({ task, index, commentCount }: Props) {
           <div className="mb-2 flex items-start justify-between gap-2">
             <div className="flex flex-wrap items-center gap-1.5">
               <DifficultyBadge difficulty={task.difficulty} />
+              <PriorityBadge priority={task.priority} />
               <SourceBadge source={task.source} />
             </div>
             <GripVertical className="h-4 w-4 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />

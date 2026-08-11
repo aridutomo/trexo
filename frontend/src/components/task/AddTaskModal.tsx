@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Input, Textarea } from "@/components/ui/Input";
 import { cn } from "@/lib/utils";
 import { useTrexo } from "@/lib/store";
-import type { TaskDifficulty, TaskSource, TaskStatus } from "@/lib/types";
+import type { TaskDifficulty, TaskPriority, TaskSource, TaskStatus } from "@/lib/types";
 
 interface Props {
   open: boolean;
@@ -43,7 +43,34 @@ const difficulties: { value: TaskDifficulty; label: string; ring: string }[] = [
   },
 ];
 
-const empty = { name: "", description: "", source: "own_idea" as TaskSource, difficulty: "medium" as TaskDifficulty, steps: [""] };
+const priorities: { value: TaskPriority; label: string; ring: string }[] = [
+  {
+    value: "low",
+    label: "Rendah",
+    ring:
+      "data-[on=true]:border-blue-500 data-[on=true]:bg-blue-50 data-[on=true]:text-blue-700 dark:data-[on=true]:bg-blue-500/15 dark:data-[on=true]:text-blue-300",
+  },
+  {
+    value: "medium",
+    label: "Sedang",
+    ring:
+      "data-[on=true]:border-amber-500 data-[on=true]:bg-amber-50 data-[on=true]:text-amber-700 dark:data-[on=true]:bg-amber-500/15 dark:data-[on=true]:text-amber-300",
+  },
+  {
+    value: "high",
+    label: "Tinggi",
+    ring:
+      "data-[on=true]:border-orange-500 data-[on=true]:bg-orange-50 data-[on=true]:text-orange-700 dark:data-[on=true]:bg-orange-500/15 dark:data-[on=true]:text-orange-300",
+  },
+  {
+    value: "urgent",
+    label: "Darurat",
+    ring:
+      "data-[on=true]:border-rose-500 data-[on=true]:bg-rose-50 data-[on=true]:text-rose-700 dark:data-[on=true]:bg-rose-500/15 dark:data-[on=true]:text-rose-300",
+  },
+];
+
+const empty = { name: "", description: "", source: "own_idea" as TaskSource, difficulty: "medium" as TaskDifficulty, priority: "medium" as TaskPriority, steps: [""] };
 
 export function AddTaskModal({ open, onClose, projectId, defaultStatus = "todo", onCreate }: Props) {
   const addTask = useTrexo((s) => s.addTask);
@@ -66,6 +93,7 @@ export function AddTaskModal({ open, onClose, projectId, defaultStatus = "todo",
         status: defaultStatus,
         source: form.source,
         difficulty: form.difficulty,
+        priority: form.priority,
         steps,
       });
       onCreate?.(task.id);
@@ -105,23 +133,23 @@ export function AddTaskModal({ open, onClose, projectId, defaultStatus = "todo",
         />
         <Textarea
           label="Deskripsi (opsional)"
-          rows={2}
+          rows={4}
           placeholder="Jelaskan singkat task ini…"
           value={form.description}
           onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
         />
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="space-y-5">
           {/* Sumber ide */}
           <div>
             <label className="mb-1.5 block text-sm font-medium text-foreground">Sumber Ide</label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="flex flex-wrap gap-2">
               {sources.map((o) => (
                 <button
                   key={o.value}
                   onClick={() => setForm((f) => ({ ...f, source: o.value }))}
                   data-on={form.source === o.value}
-                  className="flex cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-input px-2 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted data-[on=true]:border-brand-500 data-[on=true]:bg-brand-50 data-[on=true]:text-brand-700 dark:data-[on=true]:bg-brand-500/15 dark:data-[on=true]:text-brand-300"
+                  className="flex cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-input px-4 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted data-[on=true]:border-brand-500 data-[on=true]:bg-brand-50 data-[on=true]:text-brand-700 dark:data-[on=true]:bg-brand-500/15 dark:data-[on=true]:text-brand-300"
                 >
                   {o.icon}
                   {o.label}
@@ -133,14 +161,34 @@ export function AddTaskModal({ open, onClose, projectId, defaultStatus = "todo",
           {/* Kesulitan */}
           <div>
             <label className="mb-1.5 block text-sm font-medium text-foreground">Tingkat Kesulitan</label>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="flex flex-wrap gap-2">
               {difficulties.map((o) => (
                 <button
                   key={o.value}
                   onClick={() => setForm((f) => ({ ...f, difficulty: o.value }))}
                   data-on={form.difficulty === o.value}
                   className={cn(
-                    "cursor-pointer rounded-xl border border-input px-2 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted",
+                    "cursor-pointer rounded-xl border border-input px-4 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted",
+                    o.ring
+                  )}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Prioritas */}
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-foreground">Prioritas</label>
+            <div className="flex flex-wrap gap-2">
+              {priorities.map((o) => (
+                <button
+                  key={o.value}
+                  onClick={() => setForm((f) => ({ ...f, priority: o.value }))}
+                  data-on={form.priority === o.value}
+                  className={cn(
+                    "cursor-pointer rounded-xl border border-input px-4 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted",
                     o.ring
                   )}
                 >

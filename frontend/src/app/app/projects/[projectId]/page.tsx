@@ -70,9 +70,9 @@ export default function ProjectPage() {
   );
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex flex-col">
       {/* Header */}
-      <div className="border-b border-border bg-card px-4 py-5 lg:px-8">
+      <div className="sticky top-0 z-10 border-b border-border bg-card px-4 py-5 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <Link
             href="/app/dashboard"
@@ -125,8 +125,8 @@ export default function ProjectPage() {
       </div>
 
       {/* Body */}
-      <div className="flex-1 overflow-hidden p-4 lg:p-6">
-        <div className="mx-auto h-full max-w-7xl">
+      <div className="p-4 lg:p-6">
+        <div className="mx-auto max-w-7xl">
           {projectTasks.length === 0 ? (
             <EmptyState
               icon={<FolderKanban className="h-6 w-6" />}

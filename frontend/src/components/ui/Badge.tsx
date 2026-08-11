@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  tone?: "slate" | "brand" | "emerald" | "amber" | "rose" | "blue" | "violet" | "sky";
+  tone?: "slate" | "brand" | "emerald" | "amber" | "rose" | "blue" | "violet" | "sky" | "orange";
   dot?: boolean;
 }
 
@@ -14,6 +14,7 @@ const toneClasses: Record<NonNullable<BadgeProps["tone"]>, string> = {
   blue: "bg-blue-50 text-blue-700 ring-blue-200 dark:bg-blue-500/15 dark:text-blue-300 dark:ring-blue-500/20",
   violet: "bg-violet-50 text-violet-700 ring-violet-200 dark:bg-violet-500/15 dark:text-violet-300 dark:ring-violet-500/20",
   sky: "bg-sky-50 text-sky-700 ring-sky-200 dark:bg-sky-500/15 dark:text-sky-300 dark:ring-sky-500/20",
+  orange: "bg-orange-50 text-orange-700 ring-orange-200 dark:bg-orange-500/15 dark:text-orange-300 dark:ring-orange-500/20",
 };
 
 const dotClasses: Record<NonNullable<BadgeProps["tone"]>, string> = {
@@ -25,6 +26,7 @@ const dotClasses: Record<NonNullable<BadgeProps["tone"]>, string> = {
   blue: "bg-blue-500",
   violet: "bg-violet-500",
   sky: "bg-sky-500",
+  orange: "bg-orange-500",
 };
 
 export function Badge({ className, tone = "slate", dot, children, ...props }: BadgeProps) {

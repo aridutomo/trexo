@@ -22,6 +22,7 @@ type TaskCreate struct {
 	Status      string
 	Source      string
 	Difficulty  string
+	Priority    string
 	AssigneeID  string     // empty -> column NULL
 	DueDate     *time.Time // nil -> column NULL
 	StepNames   []string   // initial steps, bulk inserted at positions 0..n-1
@@ -38,6 +39,7 @@ type TaskPatch struct {
 	Status      *string
 	Source      *string
 	Difficulty  *string
+	Priority    *string
 
 	AssigneeChange bool   // true -> update the column
 	AssigneeValue  string // when Change && "" -> set NULL
@@ -92,10 +94,10 @@ func (s *TaskStore) CreateWithSteps(ctx context.Context, in TaskCreate) (Task, [
 	err := runTx(ctx, s.DB, func(tx *sqlx.Tx) error {
 		_, err := tx.ExecContext(ctx,
 			`INSERT INTO ms_task
-			   (task_id, project_id, name, description, status, source, difficulty,
+			   (task_id, project_id, name, description, status, source, difficulty, priority,
 			    assignee_id, due_date, created_by, created_time, modified_by, modified_time, is_active)
-			 VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,1)`,
-			in.TaskID, in.ProjectID, in.Name, in.Description, in.Status, in.Source, in.Difficulty,
+			 VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,1)`,
+			in.TaskID, in.ProjectID, in.Name, in.Description, in.Status, in.Source, in.Difficulty, in.Priority,
 			assignee, due, cb, now, cb, now)
 		if err != nil {
 			return err
@@ -145,6 +147,10 @@ func (s *TaskStore) Update(ctx context.Context, id string, p TaskPatch, modified
 	if p.Difficulty != nil {
 		sets = append(sets, "difficulty = ?")
 		args = append(args, *p.Difficulty)
+	}
+	if p.Priority != nil {
+		sets = append(sets, "priority = ?")
+		args = append(args, *p.Priority)
 	}
 	if p.AssigneeChange {
 		if p.AssigneeValue == "" {

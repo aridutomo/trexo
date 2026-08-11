@@ -71,6 +71,7 @@ func (h *API) CreateTask(c *gin.Context) {
 		Status      string   `json:"status" binding:"omitempty,oneof=todo in_progress review done"`
 		Source      string   `json:"source" binding:"required,oneof=own_idea user_request"`
 		Difficulty  string   `json:"difficulty" binding:"required,oneof=easy medium hard"`
+		Priority    string   `json:"priority" binding:"omitempty,oneof=low medium high urgent"`
 		AssigneeID  string   `json:"assigneeId,omitempty"`
 		DueDate     string   `json:"dueDate,omitempty"`
 		Steps       []string `json:"steps,omitempty" binding:"omitempty,dive,max=200"`
@@ -83,6 +84,10 @@ func (h *API) CreateTask(c *gin.Context) {
 	status := req.Status
 	if status == "" {
 		status = domain.StatusTodo
+	}
+	priority := req.Priority
+	if priority == "" {
+		priority = domain.PriorityMedium
 	}
 	// GAS: assignee_id = payload.assigneeId || ctx.userId; due_date = payload.dueDate || null
 	assignee := req.AssigneeID
@@ -103,6 +108,7 @@ func (h *API) CreateTask(c *gin.Context) {
 		Status:      status,
 		Source:      req.Source,
 		Difficulty:  req.Difficulty,
+		Priority:    priority,
 		AssigneeID:  assignee,
 		DueDate:     due,
 		StepNames:   req.Steps,
@@ -162,6 +168,14 @@ func (h *API) UpdateTask(c *gin.Context) {
 			return
 		}
 		p.Difficulty = &s
+	}
+	if v, ok := body["priority"]; ok {
+		s, _ := v.(string)
+		if s != "" && !domain.IsValidPriority(s) {
+			badRequest(c, fmt.Errorf("invalid priority %q", s))
+			return
+		}
+		p.Priority = &s
 	}
 	if v, ok := body["assigneeId"]; ok {
 		p.AssigneeChange = true

@@ -72,6 +72,7 @@ export const api = {
       status?: TaskStatus;
       source: Task["source"];
       difficulty: Task["difficulty"];
+      priority: Task["priority"];
       steps?: string[];
     }) =>
       request<Task>("POST", `/projects/${d.projectId}/tasks`, {
@@ -80,12 +81,13 @@ export const api = {
         status: d.status,
         source: d.source,
         difficulty: d.difficulty,
+        priority: d.priority,
         steps: d.steps,
       }),
     update: (
       id: string,
       patch: Partial<
-        Pick<Task, "name" | "description" | "status" | "source" | "difficulty" | "assigneeId" | "dueDate">
+        Pick<Task, "name" | "description" | "status" | "source" | "difficulty" | "priority" | "assigneeId" | "dueDate">
       >
     ) => request<Task>("PATCH", `/tasks/${id}`, patch),
     remove: (id: string) =>

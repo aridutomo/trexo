@@ -20,12 +20,16 @@ import { Progress } from "@/components/ui/Progress";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { TaskSteps } from "@/components/task/TaskSteps";
 import { CommentSection } from "@/components/task/CommentSection";
+import { PriorityBadge } from "@/components/task/badges";
 import {
   DIFFICULTY_META,
+  PRIORITY_META,
+  PRIORITY_ORDER,
   SOURCE_META,
   STATUS_META,
   STATUS_ORDER,
   type TaskDifficulty,
+  type TaskPriority,
   type TaskSource,
   type TaskStatus,
 } from "@/lib/types";
@@ -131,6 +135,7 @@ export default function TaskDetailPage() {
               <Badge tone={task.difficulty === "easy" ? "emerald" : task.difficulty === "medium" ? "amber" : "rose"}>
                 {DIFFICULTY_META[task.difficulty].label}
               </Badge>
+              <PriorityBadge priority={task.priority} />
               <Badge tone={task.source === "own_idea" ? "sky" : "violet"}>
                 {SOURCE_META[task.source].label}
               </Badge>
@@ -203,6 +208,12 @@ export default function TaskDetailPage() {
                   { value: "medium", label: "Medium" },
                   { value: "hard", label: "Susah" },
                 ]}
+              />
+              <Select
+                label="Prioritas"
+                value={task.priority}
+                onChange={(e) => updateTask(task.id, { priority: e.target.value as TaskPriority })}
+                options={PRIORITY_ORDER.map((p) => ({ value: p, label: PRIORITY_META[p].label }))}
               />
               <Select
                 label="Sumber Ide"

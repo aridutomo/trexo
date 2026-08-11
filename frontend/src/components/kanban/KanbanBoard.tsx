@@ -79,7 +79,7 @@ export function KanbanBoard({ tasks, onAdd }: Props) {
                   </div>
 
                   {/* Cards */}
-                  <div className="scrollbar-thin flex max-h-[calc(100vh-18rem)] flex-1 flex-col gap-2.5 overflow-y-auto px-2.5 pb-2.5">
+                  <div className="flex min-h-[8rem] flex-col gap-2.5 px-2.5 pb-3 pt-1">
                     {list.length === 0 && !snapshot.isDraggingOver && (
                       <div className="rounded-xl border border-dashed border-border py-6 text-center text-xs text-muted-foreground">
                         Tarik task ke sini
