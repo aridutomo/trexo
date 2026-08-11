@@ -10,6 +10,7 @@ Penggunaan:
 """
 
 import argparse
+import os
 import sys
 import requests
 import json
@@ -17,17 +18,10 @@ import time
 from pathlib import Path
 
 # ==================== KONFIGURASI ====================
-# Ganti dengan konfigurasi Jenkins Anda
-JENKINS_URL = "http://your-vps-ip:8080"  # Ganti dengan IP VPS Anda
-JENKINS_USER = "admin"                    # Username Jenkins
-JENKINS_TOKEN = "your-api-token"         # API Token Jenkins (dari /configure/credentials)
-JOB_NAME = "trexo"                       # Nama job di Jenkins
-
-# Atau gunakan environment variable untuk keamanan
-import os
-JENKINS_URL = os.getenv("JENKINS_URL", JENKINS_URL)
-JENKINS_USER = os.getenv("JENKINS_USER", JENKINS_USER)
-JENKINS_TOKEN = os.getenv("JENKINS_TOKEN", JENKINS_TOKEN)
+# Kredensial Jenkins (URL, user, token) WAJIB diisi via environment variable
+# atau file .env — JANGAN hardcode di sini. Lihat tools/.env.example untuk template.
+# File .env dimuat di main() sebelum konfigurasi dipakai.
+JOB_NAME = os.getenv("JENKINS_JOB_NAME", "trexo")  # Nama job di Jenkins (bisa di-override via .env)
 
 
 class JenkinsPublisher:
@@ -265,8 +259,13 @@ def main():
                     key, value = line.split('=', 1)
                     os.environ[key.strip()] = value.strip()
 
+    # Baca konfigurasi dari environment (file .env di atas sudah termuat ke os.environ)
+    jenkins_url = os.getenv("JENKINS_URL", "").strip()
+    jenkins_user = os.getenv("JENKINS_USER", "").strip()
+    jenkins_token = os.getenv("JENKINS_TOKEN", "").strip()
+
     # Validate configuration
-    if not all([JENKINS_URL, JENKINS_USER, JENKINS_TOKEN]):
+    if not all([jenkins_url, jenkins_user, jenkins_token]):
         print("❌ Error: Jenkins configuration tidak lengkap!")
         print("\nSilakan set berikut:")
         print("  1. Environment variable:")
@@ -274,13 +273,12 @@ def main():
         print("     export JENKINS_USER=admin")
         print("     export JENKINS_TOKEN=your-token")
         print("\n  2. Atau gunakan .env file:")
-        print("     python publish_trexo.py --create-env")
-        print("     # Edit .env file tersebut")
+        print("     cp tools/.env.example .env   # lalu edit .env")
         print("     python publish_trexo.py --env-file .env")
         return 1
 
     # Create publisher instance
-    publisher = JenkinsPublisher(JENKINS_URL, JENKINS_USER, JENKINS_TOKEN)
+    publisher = JenkinsPublisher(jenkins_url, jenkins_user, jenkins_token)
 
     # Test mode
     if args.test:
@@ -302,7 +300,7 @@ def main():
         return 0 if success else 1
     else:
         print("\n💡 Gunakan --wait untuk melihat progress build")
-        print(f"   Atau buka {JENKINS_URL}/job/{JOB_NAME}/lastBuild/console")
+        print(f"   Atau buka {jenkins_url}/job/{JOB_NAME}/lastBuild/console")
 
     return 0
 

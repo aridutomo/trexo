@@ -67,8 +67,8 @@ scp user@vps-ip:/home/aridutomo/publish_trexo.py ./
 #### B. Buat .env file:
 
 ```bash
-# Buat .env dari template
-cp .env.jenkins.example .env
+# Buat .env dari template (template ada di tools/.env.example)
+cp tools/.env.example .env
 
 # Edit .env dengan konfigurasi yang benar:
 nano .env
@@ -80,6 +80,9 @@ JENKINS_URL=http://your-vps-ip:8080
 JENKINS_USER=admin
 JENKINS_TOKEN=token-dari-langkah-3
 ```
+
+> ⚠️ **Penting:** Jangan pernah hardcode token langsung di `publish_trexo.py` dan
+> jangan commit file `.env`. File `.env` sudah di-ignore oleh `.gitignore`.
 
 #### C. Install dependencies (jika belum):
 
