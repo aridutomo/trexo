@@ -7,8 +7,10 @@
 --   ms_task      -> ms_project     ON DELETE CASCADE
 --   tr_task_step -> ms_task        ON DELETE CASCADE
 --   tr_comment   -> ms_task        ON DELETE CASCADE
--- Tabel better-auth (user/session/account/verification) dibuat terpisah oleh
--- `npx @better-auth/cli migrate` dan TIDAK dikelola golang-migrate.
+-- Tabel better-auth (user/session/account/verification) pembuatannya utama
+-- via `npx @better-auth/cli migrate` (frontend). Sebagai safety-net agar tabel
+-- otomatis terbuat saat deploy (mis. DB VPS terhapus), strukturnya juga
+-- direplikasi di migrasi 000004 (CREATE TABLE IF NOT EXISTS, tanpa data).
 -- owner_id / user_id / assignee_id adalah soft-FK varchar ke better-auth user.
 
 SET NAMES utf8mb4;
