@@ -1,4 +1,4 @@
-import type { Comment, Project, Task, TaskStatus, TaskStep, Workspace } from "./types";
+import type { Comment, Notification, Project, Task, TaskStatus, TaskStep, Workspace } from "./types";
 
 // Typed browser client for business data. It calls the Next.js BFF at /api/v1/*
 // (src/app/api/v1/[...path]), which authenticates via better-auth and forwards
@@ -118,5 +118,26 @@ export const api = {
       request<Comment>("POST", `/tasks/${taskId}/comments`, { content }),
     remove: (id: string) =>
       request<{ id: string; deleted: boolean }>("DELETE", `/comments/${id}`),
+  },
+
+  notification: {
+    // scope: undefined = semua project (dashboard); projectId = per project.
+    // unread=true = hanya yang belum dibaca (badge lonceng).
+    list: (params?: { projectId?: string; unread?: boolean }) => {
+      const qs = new URLSearchParams();
+      if (params?.projectId) qs.set("projectId", params.projectId);
+      if (params?.unread) qs.set("unread", "true");
+      const suffix = qs.toString() ? `?${qs.toString()}` : "";
+      return request<Notification[]>("GET", `/notifications${suffix}`);
+    },
+    markRead: (id: string) =>
+      request<{ id: string; read: boolean }>("POST", `/notifications/${id}/read`),
+    markAllRead: () =>
+      request<{ read: boolean }>("POST", `/notifications/read-all`),
+    dismiss: (id: string) =>
+      request<{ id: string; dismissed: boolean }>(
+        "POST",
+        `/notifications/${id}/dismiss`,
+      ),
   },
 };

@@ -58,6 +58,26 @@ type CommentDTO struct {
 	CreatedAt string `json:"createdAt"`
 }
 
+// NotificationDTO is the shape of a reminder/notification row. Must match
+// src/lib/types.ts (Notification). dueAt/readAt/projectId use omitempty so a
+// NULL DB column becomes absent (undefined) in JSON.
+type NotificationDTO struct {
+	ID          string `json:"id"`
+	Type        string `json:"type"`
+	Severity    string `json:"severity"`
+	Title       string `json:"title"`
+	Body        string `json:"body"`
+	RefType     string `json:"refType"`
+	RefID       string `json:"refId"`
+	ProjectID   string `json:"projectId,omitempty"`
+	DueAt       string `json:"dueAt,omitempty"`
+	TargetURL   string `json:"targetUrl"`
+	IsRead      bool   `json:"isRead"`
+	IsDismissed bool   `json:"isDismissed"`
+	CreatedAt   string `json:"createdAt"`
+	ReadAt      string `json:"readAt,omitempty"`
+}
+
 // DeletedDTO is the {id, deleted:true} shape for delete operations.
 type DeletedDTO struct {
 	ID      string `json:"id"`

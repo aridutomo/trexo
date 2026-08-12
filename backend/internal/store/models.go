@@ -158,3 +158,53 @@ func (c Comment) ToDTO() domain.CommentDTO {
 		CreatedAt: c.CreatedTime.UTC().Format(time.RFC3339Nano),
 	}
 }
+
+type Notification struct {
+	ID             int64          `db:"id"`
+	NotificationID string         `db:"notification_id"`
+	UserID         string         `db:"user_id"`
+	Type           string         `db:"type"`
+	Severity       string         `db:"severity"`
+	Title          string         `db:"title"`
+	Body           string         `db:"body"`
+	RefType        string         `db:"ref_type"`
+	RefID          string         `db:"ref_id"`
+	ProjectID      sql.NullString `db:"project_id"`
+	DueAt          sql.NullTime   `db:"due_at"`
+	TargetURL      string         `db:"target_url"`
+	IsRead         bool           `db:"is_read"`
+	ReadAt         sql.NullTime   `db:"read_at"`
+	IsDismissed    bool           `db:"is_dismissed"`
+	DismissedUntil sql.NullTime   `db:"dismissed_until"`
+	CreatedBy      sql.NullString `db:"created_by"`
+	CreatedTime    time.Time      `db:"created_time"`
+	ModifiedBy     sql.NullString `db:"modified_by"`
+	ModifiedTime   time.Time      `db:"modified_time"`
+	IsActive       bool           `db:"is_active"`
+}
+
+func (n Notification) ToDTO() domain.NotificationDTO {
+	out := domain.NotificationDTO{
+		ID:          n.NotificationID,
+		Type:        n.Type,
+		Severity:    n.Severity,
+		Title:       n.Title,
+		Body:        n.Body,
+		RefType:     n.RefType,
+		RefID:       n.RefID,
+		TargetURL:   n.TargetURL,
+		IsRead:      n.IsRead,
+		IsDismissed: n.IsDismissed,
+		CreatedAt:   n.CreatedTime.UTC().Format(time.RFC3339Nano),
+	}
+	if n.ProjectID.Valid {
+		out.ProjectID = n.ProjectID.String
+	}
+	if n.DueAt.Valid {
+		out.DueAt = n.DueAt.Time.UTC().Format(time.RFC3339Nano)
+	}
+	if n.ReadAt.Valid {
+		out.ReadAt = n.ReadAt.Time.UTC().Format(time.RFC3339Nano)
+	}
+	return out
+}

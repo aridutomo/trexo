@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { api } from "./api";
 import type {
   Comment,
+  Notification,
   Project,
   Task,
   TaskDifficulty,
@@ -28,6 +29,7 @@ interface TrexoState {
   projects: Project[];
   tasks: Task[];
   comments: Comment[];
+  notifications: Notification[];
 
   activeWorkspaceId: string | null;
   activeProjectId: string | null;
@@ -38,6 +40,12 @@ interface TrexoState {
   bootstrap: () => Promise<void>;
   reset: () => void;
   loadComments: (taskId: string) => Promise<void>;
+
+  // ---- notifications ----
+  loadNotifications: () => Promise<void>;
+  markNotificationRead: (id: string) => Promise<void>;
+  markAllNotificationsRead: () => Promise<void>;
+  dismissNotification: (id: string) => Promise<void>;
 
   // ---- workspace ----
   addWorkspace: (data: { name: string; type: WorkspaceType; color: string }) => Promise<Workspace>;
@@ -94,6 +102,7 @@ export const useTrexo = create<TrexoState>()((set, get) => ({
   projects: [],
   tasks: [],
   comments: [],
+  notifications: [],
   activeWorkspaceId: null,
   activeProjectId: null,
   bootstrapped: false,
@@ -124,11 +133,15 @@ export const useTrexo = create<TrexoState>()((set, get) => ({
         projects,
         tasks,
         comments: [],
+        notifications: s.notifications,
         activeWorkspaceId:
           s.activeWorkspaceId && workspaces.some((w) => w.id === s.activeWorkspaceId)
             ? s.activeWorkspaceId
             : workspaces[0]?.id ?? null,
       }));
+      // Pengingat dimuat terpisah (best-effort) agar kegagalan /notifications tidak
+      // membatalkan bootstrap data utama.
+      void get().loadNotifications();
     } catch (e) {
       set({ bootstrapped: false }); // allow retry on failure
       // A 401 here is expected during logout teardown: the session was just
@@ -146,6 +159,7 @@ export const useTrexo = create<TrexoState>()((set, get) => ({
       projects: [],
       tasks: [],
       comments: [],
+      notifications: [],
       activeWorkspaceId: null,
       activeProjectId: null,
       bootstrapped: false,
@@ -156,6 +170,36 @@ export const useTrexo = create<TrexoState>()((set, get) => ({
     set((s) => ({
       comments: [...s.comments.filter((c) => c.taskId !== taskId), ...cs],
     }));
+  },
+
+  // ------------------------------------------------------------ notifications
+  loadNotifications: async () => {
+    const ns = await api.notification.list();
+    set({ notifications: ns });
+  },
+
+  markNotificationRead: async (id) => {
+    // Optimistic: tandai lokal dulu, sync background.
+    set((s) => ({
+      notifications: s.notifications.map((n) =>
+        n.id === id ? { ...n, isRead: true, readAt: new Date().toISOString() } : n,
+      ),
+    }));
+    fire(api.notification.markRead(id));
+  },
+
+  markAllNotificationsRead: async () => {
+    set((s) => ({
+      notifications: s.notifications.map((n) => ({ ...n, isRead: true })),
+    }));
+    fire(api.notification.markAllRead());
+  },
+
+  dismissNotification: async (id) => {
+    // Hilangkan dari daftar aktif lokal (snooze). Akan muncul lagi dari server
+    // saat loadNotifications berikutnya jika snooze sudah lewat & task belum done.
+    set((s) => ({ notifications: s.notifications.filter((n) => n.id !== id) }));
+    fire(api.notification.dismiss(id));
   },
 
   // ---------------------------------------------------------------- workspace
@@ -298,3 +342,11 @@ export const selectTasksByProject = (projectId: string) => (s: TrexoState) =>
 
 export const selectProjectsByWorkspace = (workspaceId: string) => (s: TrexoState) =>
   s.projects.filter((p) => p.workspaceId === workspaceId);
+
+// Jumlah pengingat belum dibaca (untuk badge lonceng).
+export const selectUnreadNotificationCount = (s: TrexoState) =>
+  s.notifications.filter((n) => !n.isRead).length;
+
+// Pengingat untuk satu project (halaman project).
+export const selectNotificationsByProject = (projectId: string) => (s: TrexoState) =>
+  s.notifications.filter((n) => n.projectId === projectId);

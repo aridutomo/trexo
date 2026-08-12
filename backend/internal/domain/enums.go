@@ -24,7 +24,36 @@ const (
 
 	TypePersonal = "personal"
 	TypeCompany  = "company"
+
+	// Notification types. task_overdue = lewat due_date; task_due_soon = dalam
+	// ambang batas (default 3 hari). task_assigned/comment_mention reserved for
+	// future use (generator hanya emit task_* saat ini).
+	NtfTaskOverdue    = "task_overdue"
+	NtfTaskDueSoon    = "task_due_soon"
+	NtfTaskAssigned   = "task_assigned"
+	NtfCommentMention = "comment_mention"
+
+	// Notification severity -> warna UI (info / warning / urgent).
+	NtfSeverityInfo    = "info"
+	NtfSeverityWarning = "warning"
+	NtfSeverityUrgent  = "urgent"
 )
+
+func IsValidNotificationType(s string) bool {
+	switch s {
+	case NtfTaskOverdue, NtfTaskDueSoon, NtfTaskAssigned, NtfCommentMention:
+		return true
+	}
+	return false
+}
+
+func IsValidNotificationSeverity(s string) bool {
+	switch s {
+	case NtfSeverityInfo, NtfSeverityWarning, NtfSeverityUrgent:
+		return true
+	}
+	return false
+}
 
 func IsValidStatus(s string) bool {
 	switch s {

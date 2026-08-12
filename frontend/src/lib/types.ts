@@ -53,6 +53,66 @@ export interface Comment {
   createdAt: string;
 }
 
+// ============================================================
+// Notifikasi / pengingat (mirror ms_notification di backend)
+// ============================================================
+
+export type NotificationType =
+  | "task_overdue"
+  | "task_due_soon"
+  | "task_assigned"
+  | "comment_mention";
+
+export type NotificationSeverity = "info" | "warning" | "urgent";
+
+export interface Notification {
+  id: string;
+  type: NotificationType;
+  severity: NotificationSeverity;
+  title: string;
+  body: string; // nama task / pesan singkat
+  refType: string; // "task" | "project" | "comment"
+  refId: string;
+  projectId?: string;
+  dueAt?: string; // ISO due_date snapshot
+  targetUrl: string; // deep link saat diklik
+  isRead: boolean;
+  isDismissed: boolean;
+  createdAt: string;
+  readAt?: string;
+}
+
+// Metadata severity untuk UI (warna + ikon). Mirror gaya badge yang sudah ada.
+export const NOTIF_SEVERITY_META: Record<
+  NotificationSeverity,
+  { label: string; dot: string; icon: string; ring: string; text: string; bg: string }
+> = {
+  urgent: {
+    label: "Terlambat",
+    dot: "bg-rose-500",
+    icon: "text-rose-500",
+    ring: "ring-rose-200 dark:ring-rose-500/20",
+    text: "text-rose-600 dark:text-rose-400",
+    bg: "bg-rose-50 dark:bg-rose-500/15",
+  },
+  warning: {
+    label: "Segera",
+    dot: "bg-amber-500",
+    icon: "text-amber-500",
+    ring: "ring-amber-200 dark:ring-amber-500/20",
+    text: "text-amber-600 dark:text-amber-400",
+    bg: "bg-amber-50 dark:bg-amber-500/15",
+  },
+  info: {
+    label: "Mendekati",
+    dot: "bg-sky-500",
+    icon: "text-sky-500",
+    ring: "ring-sky-200 dark:ring-sky-500/20",
+    text: "text-sky-600 dark:text-sky-400",
+    bg: "bg-sky-50 dark:bg-sky-500/15",
+  },
+};
+
 export interface Task {
   id: string;
   projectId: string;

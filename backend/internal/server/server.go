@@ -68,6 +68,16 @@ func NewRouter(s *store.Stores, cfg *config.Config) *gin.Engine {
 		v1.GET("/tasks/:id/comments", api.ListComments)
 		v1.POST("/tasks/:id/comments", api.CreateComment)
 		v1.DELETE("/comments/:id", api.DeleteComment)
+
+		// Notifications (pengingat task overdue / mendekati jatuh tempo).
+		//   GET    /notifications?projectId=&unread=true
+		//   POST   /notifications/read-all
+		//   POST   /notifications/:id/read
+		//   POST   /notifications/:id/dismiss
+		v1.GET("/notifications", api.ListNotifications)
+		v1.POST("/notifications/read-all", api.MarkAllRead)
+		v1.POST("/notifications/:id/read", api.MarkRead)
+		v1.POST("/notifications/:id/dismiss", api.DismissNotification)
 	}
 
 	r.NoRoute(func(c *gin.Context) { respond.Error(c, domain.ErrNotFound("Route not found.")) })

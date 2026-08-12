@@ -10,22 +10,24 @@ import (
 // Stores is the single dependency handed to HTTP handlers. It holds the pool and
 // one store per entity. It also implements domain.AuthzReader (see authz.go).
 type Stores struct {
-	DB        *sqlx.DB
-	Workspace *WorkspaceStore
-	Project   *ProjectStore
-	Task      *TaskStore
-	Step      *StepStore
-	Comment   *CommentStore
+	DB           *sqlx.DB
+	Workspace    *WorkspaceStore
+	Project      *ProjectStore
+	Task         *TaskStore
+	Step         *StepStore
+	Comment      *CommentStore
+	Notification *NotificationStore
 }
 
 func NewStores(db *sqlx.DB) *Stores {
 	return &Stores{
-		DB:        db,
-		Workspace: &WorkspaceStore{DB: db},
-		Project:   &ProjectStore{DB: db},
-		Task:      &TaskStore{DB: db},
-		Step:      &StepStore{DB: db},
-		Comment:   &CommentStore{DB: db},
+		DB:           db,
+		Workspace:    &WorkspaceStore{DB: db},
+		Project:      &ProjectStore{DB: db},
+		Task:         &TaskStore{DB: db},
+		Step:         &StepStore{DB: db},
+		Comment:      &CommentStore{DB: db},
+		Notification: &NotificationStore{DB: db},
 	}
 }
 
