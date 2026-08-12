@@ -1,3 +1,11 @@
 .env
 .env.*
 *.local
+# Keep the placeholder-only templates committed (safe — no real secrets).
+!.env.staging.example
+!.env.production.example
+
+# Compiled binaries — dev uses `go run`; prod builds inside the Docker image.
+*.exe
+/trexo
+/trexo-server

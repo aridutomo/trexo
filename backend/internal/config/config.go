@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/joho/godotenv"
 )
 
 // Config holds all runtime settings for the server.
@@ -19,6 +21,12 @@ type Config struct {
 
 // Load reads configuration from the environment. Required vars panic via error.
 func Load() (*Config, error) {
+	// Load an optional local runtime env file (gitignored .env.local) so the app
+	// can be pointed at staging vs production with `go run` via switch-db.sh.
+	// godotenv.Load is a no-op when the file is missing and never overrides vars
+	// that are already set, so Docker/production env is completely unaffected.
+	_ = godotenv.Load(".env.local")
+
 	port := envOrDefault("PORT", "8080")
 	dsn := os.Getenv("DSN")
 	if dsn == "" {
