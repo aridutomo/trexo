@@ -35,19 +35,20 @@ type StepDTO struct {
 }
 
 type TaskDTO struct {
-	ID          string    `json:"id"`
-	ProjectID   string    `json:"projectId"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	Status      string    `json:"status"`
-	Source      string    `json:"source"`
-	Difficulty  string    `json:"difficulty"`
-	Priority    string    `json:"priority"`
-	Steps       []StepDTO `json:"steps"`
-	AssigneeID  string    `json:"assigneeId,omitempty"`
-	DueDate     string    `json:"dueDate,omitempty"`
-	CreatedAt   string    `json:"createdAt"`
-	UpdatedAt   string    `json:"updatedAt"`
+	ID             string    `json:"id"`
+	ProjectID      string    `json:"projectId"`
+	Name           string    `json:"name"`
+	Description    string    `json:"description"`
+	Status         string    `json:"status"`
+	Source         string    `json:"source"`
+	Difficulty     string    `json:"difficulty"`
+	Priority       string    `json:"priority"`
+	IsDocumentTask bool      `json:"isDocumentTask"`
+	Steps          []StepDTO `json:"steps"`
+	AssigneeID     string    `json:"assigneeId,omitempty"`
+	DueDate        string    `json:"dueDate,omitempty"`
+	CreatedAt      string    `json:"createdAt"`
+	UpdatedAt      string    `json:"updatedAt"`
 }
 
 type CommentDTO struct {

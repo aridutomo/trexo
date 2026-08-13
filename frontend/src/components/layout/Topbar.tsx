@@ -3,6 +3,7 @@
 import { Menu, Search } from "lucide-react";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { NotificationBell } from "@/components/layout/NotificationBell";
+import { EnvBadge } from "@/components/layout/EnvBadge";
 
 export function Topbar({
   title,
@@ -27,6 +28,7 @@ export function Topbar({
       <h1 className="truncate text-lg font-semibold tracking-tight text-foreground sm:text-xl">
         {title}
       </h1>
+      <EnvBadge />
 
       <div className="ml-auto flex items-center gap-1.5">
         {/* Mobile: open full-screen search */}

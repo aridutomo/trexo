@@ -73,6 +73,7 @@ export const api = {
       source: Task["source"];
       difficulty: Task["difficulty"];
       priority: Task["priority"];
+      isDocumentTask: boolean;
       steps?: string[];
     }) =>
       request<Task>("POST", `/projects/${d.projectId}/tasks`, {
@@ -82,12 +83,13 @@ export const api = {
         source: d.source,
         difficulty: d.difficulty,
         priority: d.priority,
+        isDocumentTask: d.isDocumentTask,
         steps: d.steps,
       }),
     update: (
       id: string,
       patch: Partial<
-        Pick<Task, "name" | "description" | "status" | "source" | "difficulty" | "priority" | "assigneeId" | "dueDate">
+        Pick<Task, "name" | "description" | "status" | "source" | "difficulty" | "priority" | "isDocumentTask" | "assigneeId" | "dueDate">
       >
     ) => request<Task>("PATCH", `/tasks/${id}`, patch),
     remove: (id: string) =>

@@ -66,15 +66,16 @@ func (h *API) CreateTask(c *gin.Context) {
 	uid := userID(c)
 
 	var req struct {
-		Name        string   `json:"name" binding:"required,max=200"`
-		Description string   `json:"description"`
-		Status      string   `json:"status" binding:"omitempty,oneof=todo in_progress review done"`
-		Source      string   `json:"source" binding:"required,oneof=own_idea user_request"`
-		Difficulty  string   `json:"difficulty" binding:"required,oneof=easy medium hard"`
-		Priority    string   `json:"priority" binding:"omitempty,oneof=low medium high urgent"`
-		AssigneeID  string   `json:"assigneeId,omitempty"`
-		DueDate     string   `json:"dueDate,omitempty"`
-		Steps       []string `json:"steps,omitempty" binding:"omitempty,dive,max=200"`
+		Name           string   `json:"name" binding:"required,max=200"`
+		Description    string   `json:"description"`
+		Status         string   `json:"status" binding:"omitempty,oneof=todo in_progress review done"`
+		Source         string   `json:"source" binding:"required,oneof=own_idea user_request"`
+		Difficulty     string   `json:"difficulty" binding:"required,oneof=easy medium hard"`
+		Priority       string   `json:"priority" binding:"omitempty,oneof=low medium high urgent"`
+		IsDocumentTask bool     `json:"isDocumentTask"`
+		AssigneeID     string   `json:"assigneeId,omitempty"`
+		DueDate        string   `json:"dueDate,omitempty"`
+		Steps          []string `json:"steps,omitempty" binding:"omitempty,dive,max=200"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		badRequest(c, err)
@@ -101,18 +102,19 @@ func (h *API) CreateTask(c *gin.Context) {
 	}
 
 	task, steps, err := h.S.Task.CreateWithSteps(c.Request.Context(), store.TaskCreate{
-		TaskID:      domain.GenID("t"),
-		ProjectID:   pid,
-		Name:        req.Name,
-		Description: req.Description,
-		Status:      status,
-		Source:      req.Source,
-		Difficulty:  req.Difficulty,
-		Priority:    priority,
-		AssigneeID:  assignee,
-		DueDate:     due,
-		StepNames:   req.Steps,
-		CreatedBy:   uid,
+		TaskID:         domain.GenID("t"),
+		ProjectID:      pid,
+		Name:           req.Name,
+		Description:    req.Description,
+		Status:         status,
+		Source:         req.Source,
+		Difficulty:     req.Difficulty,
+		Priority:       priority,
+		IsDocumentTask: req.IsDocumentTask,
+		AssigneeID:     assignee,
+		DueDate:        due,
+		StepNames:      req.Steps,
+		CreatedBy:      uid,
 	})
 	if err != nil {
 		respond.Error(c, err)
@@ -176,6 +178,10 @@ func (h *API) UpdateTask(c *gin.Context) {
 			return
 		}
 		p.Priority = &s
+	}
+	if v, ok := body["isDocumentTask"]; ok {
+		b, _ := v.(bool)
+		p.IsDocumentTask = &b
 	}
 	if v, ok := body["assigneeId"]; ok {
 		p.AssigneeChange = true

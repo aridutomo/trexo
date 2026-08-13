@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { TrexoLogo, TrexoWordmarkLight } from "@/components/brand/TrexoLogo";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { EnvBadge } from "@/components/layout/EnvBadge";
 import { signInAction, signUpAction, type AuthState } from "./actions";
 
 const highlights = [
@@ -69,7 +70,8 @@ export default function LoginPage() {
 
       {/* Panel form */}
       <div className="relative flex w-full flex-col items-center justify-center px-6 lg:w-1/2">
-        <div className="absolute right-4 top-4 sm:right-6 sm:top-6">
+        <div className="absolute right-4 top-4 flex items-center gap-2 sm:right-6 sm:top-6">
+          <EnvBadge />
           <ThemeToggle />
         </div>
         <div className="w-full max-w-sm">

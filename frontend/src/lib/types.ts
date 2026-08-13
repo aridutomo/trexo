@@ -122,6 +122,7 @@ export interface Task {
   source: TaskSource;
   difficulty: TaskDifficulty;
   priority: TaskPriority;
+  isDocumentTask: boolean;
   steps: TaskStep[];
   assigneeId?: string;
   dueDate?: string;

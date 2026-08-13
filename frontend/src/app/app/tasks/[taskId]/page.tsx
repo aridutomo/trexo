@@ -10,6 +10,7 @@ import {
   Clock,
   Info,
   CircleCheck,
+  FileText,
 } from "lucide-react";
 import { useTrexo } from "@/lib/store";
 import { Button } from "@/components/ui/Button";
@@ -18,6 +19,7 @@ import { Modal } from "@/components/ui/Modal";
 import { Badge } from "@/components/ui/Badge";
 import { Progress } from "@/components/ui/Progress";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { DatePicker } from "@/components/ui/DatePicker";
 import { TaskSteps } from "@/components/task/TaskSteps";
 import { CommentSection } from "@/components/task/CommentSection";
 import { PriorityBadge } from "@/components/task/badges";
@@ -33,7 +35,7 @@ import {
   type TaskSource,
   type TaskStatus,
 } from "@/lib/types";
-import { computeProgress, formatDate, formatRelative } from "@/lib/utils";
+import { cn, computeProgress, formatDate, formatRelative } from "@/lib/utils";
 
 const statusTone: Record<TaskStatus, "slate" | "blue" | "amber" | "emerald"> = {
   todo: "slate",
@@ -104,7 +106,6 @@ export default function TaskDetailPage() {
     }
   };
 
-  const dueValue = task.dueDate ? task.dueDate.slice(0, 10) : "";
 
   return (
     <div className="mx-auto max-w-6xl p-4 lg:p-8">
@@ -224,22 +225,40 @@ export default function TaskDetailPage() {
                   { value: "user_request", label: "Permintaan User" },
                 ]}
               />
+              {/* Dokumen task */}
+              <div className="flex items-center justify-between">
+                <label className="flex items-center gap-1.5 text-sm font-medium text-foreground">
+                  <FileText className="h-3.5 w-3.5 text-muted-foreground" />
+                  Ada dokumen?
+                </label>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={task.isDocumentTask}
+                  aria-label="Ada dokumen task"
+                  onClick={() => updateTask(task.id, { isDocumentTask: !task.isDocumentTask })}
+                  className={cn(
+                    "relative h-6 w-11 shrink-0 cursor-pointer rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/40",
+                    task.isDocumentTask ? "bg-brand-600" : "bg-muted-foreground/30",
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200",
+                      task.isDocumentTask ? "translate-x-5" : "translate-x-0",
+                    )}
+                  />
+                </button>
+              </div>
+
               <div>
                 <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-foreground">
                   <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
                   Jatuh Tempo
                 </label>
-                <input
-                  type="date"
-                  value={dueValue}
-                  onChange={(e) =>
-                    updateTask(task.id, {
-                      dueDate: e.target.value
-                        ? new Date(e.target.value + "T23:59:00").toISOString()
-                        : undefined,
-                    })
-                  }
-                  className="h-10 w-full cursor-pointer rounded-xl border border-input bg-card px-3 text-sm text-foreground transition-colors [color-scheme:light] focus:border-brand-400 focus:outline-none focus:ring-4 focus:ring-brand-500/15 dark:[color-scheme:dark]"
+                <DatePicker
+                  value={task.dueDate}
+                  onChange={(iso) => updateTask(task.id, { dueDate: iso })}
                 />
               </div>
             </div>

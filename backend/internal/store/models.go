@@ -83,22 +83,23 @@ func (s Step) ToDTO() domain.StepDTO {
 }
 
 type Task struct {
-	ID           int64          `db:"id"`
-	TaskID       string         `db:"task_id"`
-	ProjectID    string         `db:"project_id"`
-	Name         string         `db:"name"`
-	Description  string         `db:"description"`
-	Status       string         `db:"status"`
-	Source       string         `db:"source"`
-	Difficulty   string         `db:"difficulty"`
-	Priority     string         `db:"priority"`
-	AssigneeID   sql.NullString `db:"assignee_id"`
-	DueDate      sql.NullTime   `db:"due_date"`
-	CreatedBy    sql.NullString `db:"created_by"`
-	CreatedTime  time.Time      `db:"created_time"`
-	ModifiedBy   sql.NullString `db:"modified_by"`
-	ModifiedTime time.Time      `db:"modified_time"`
-	IsActive     bool           `db:"is_active"`
+	ID             int64          `db:"id"`
+	TaskID         string         `db:"task_id"`
+	ProjectID      string         `db:"project_id"`
+	Name           string         `db:"name"`
+	Description    string         `db:"description"`
+	Status         string         `db:"status"`
+	Source         string         `db:"source"`
+	Difficulty     string         `db:"difficulty"`
+	Priority       string         `db:"priority"`
+	AssigneeID     sql.NullString `db:"assignee_id"`
+	DueDate        sql.NullTime   `db:"due_date"`
+	CreatedBy      sql.NullString `db:"created_by"`
+	CreatedTime    time.Time      `db:"created_time"`
+	ModifiedBy     sql.NullString `db:"modified_by"`
+	ModifiedTime   time.Time      `db:"modified_time"`
+	IsActive       bool           `db:"is_active"`
+	IsDocumentTask bool           `db:"is_document_task"`
 }
 
 // ToDTO shapes the task. steps may be nil (task.update/task.move return steps:[]);
@@ -112,17 +113,18 @@ func (t Task) ToDTO(steps []Step) domain.TaskDTO {
 		priority = domain.PriorityMedium
 	}
 	out := domain.TaskDTO{
-		ID:          t.TaskID,
-		ProjectID:   t.ProjectID,
-		Name:        t.Name,
-		Description: t.Description,
-		Status:      t.Status,
-		Source:      t.Source,
-		Difficulty:  t.Difficulty,
-		Priority:    priority,
-		Steps:       []domain.StepDTO{},
-		CreatedAt:   t.CreatedTime.UTC().Format(time.RFC3339Nano),
-		UpdatedAt:   t.ModifiedTime.UTC().Format(time.RFC3339Nano),
+		ID:             t.TaskID,
+		ProjectID:      t.ProjectID,
+		Name:           t.Name,
+		Description:    t.Description,
+		Status:         t.Status,
+		Source:         t.Source,
+		Difficulty:     t.Difficulty,
+		Priority:       priority,
+		IsDocumentTask: t.IsDocumentTask,
+		Steps:          []domain.StepDTO{},
+		CreatedAt:      t.CreatedTime.UTC().Format(time.RFC3339Nano),
+		UpdatedAt:      t.ModifiedTime.UTC().Format(time.RFC3339Nano),
 	}
 	if t.AssigneeID.Valid {
 		out.AssigneeID = t.AssigneeID.String

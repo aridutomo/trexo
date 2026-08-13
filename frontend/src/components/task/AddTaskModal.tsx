@@ -70,7 +70,7 @@ const priorities: { value: TaskPriority; label: string; ring: string }[] = [
   },
 ];
 
-const empty = { name: "", description: "", source: "own_idea" as TaskSource, difficulty: "medium" as TaskDifficulty, priority: "medium" as TaskPriority, steps: [""] };
+const empty = { name: "", description: "", source: "own_idea" as TaskSource, difficulty: "medium" as TaskDifficulty, priority: "medium" as TaskPriority, isDocumentTask: false, steps: [""] };
 
 export function AddTaskModal({ open, onClose, projectId, defaultStatus = "todo", onCreate }: Props) {
   const addTask = useTrexo((s) => s.addTask);
@@ -94,6 +94,7 @@ export function AddTaskModal({ open, onClose, projectId, defaultStatus = "todo",
         source: form.source,
         difficulty: form.difficulty,
         priority: form.priority,
+        isDocumentTask: form.isDocumentTask,
         steps,
       });
       onCreate?.(task.id);
@@ -197,6 +198,32 @@ export function AddTaskModal({ open, onClose, projectId, defaultStatus = "todo",
               ))}
             </div>
           </div>
+        </div>
+
+        {/* Dokumen task */}
+        <div className="flex items-center justify-between rounded-xl border border-input px-4 py-3">
+          <div>
+            <p className="text-sm font-medium text-foreground">Ada dokumen task?</p>
+            <p className="text-xs text-muted-foreground">Nyalakan jika task ini punya dokumen pendukung.</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setForm((f) => ({ ...f, isDocumentTask: !f.isDocumentTask }))}
+            role="switch"
+            aria-checked={form.isDocumentTask}
+            aria-label="Ada dokumen task"
+            className={cn(
+              "relative h-6 w-11 shrink-0 cursor-pointer rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/40",
+              form.isDocumentTask ? "bg-brand-600" : "bg-muted-foreground/30",
+            )}
+          >
+            <span
+              className={cn(
+                "absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200",
+                form.isDocumentTask ? "translate-x-5" : "translate-x-0",
+              )}
+            />
+          </button>
         </div>
 
         {/* Steps awal */}
